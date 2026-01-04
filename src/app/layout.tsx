@@ -1,24 +1,27 @@
-import { Outfit } from 'next/font/google';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
-import { SidebarProvider } from '@/context/SidebarContext';
-import { ThemeProvider } from '@/context/ThemeContext';
+const inter = Inter({ subsets: ['latin'] });
 
-const outfit = Outfit({
-  subsets: ["latin"],
-});
+export const metadata: Metadata = {
+  title: 'Ticket Bhandar - Book Cheap Flights from Nepal',
+  description: 'Book cheap flights other sites simply can\'t',
+};
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body className={`${outfit.className} dark:bg-gray-900`}>
-        <ThemeProvider>
-          <SidebarProvider>{children}</SidebarProvider>
-        </ThemeProvider>
+      <body className={inter.className}>
+        <Header />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
