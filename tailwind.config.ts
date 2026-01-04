@@ -14,6 +14,9 @@ const config: Config = {
           900: '#1e293b',
         },
       },
+      maxWidth: {
+        '8xl': '1400px',
+      },
     },
   },
   plugins: [],
