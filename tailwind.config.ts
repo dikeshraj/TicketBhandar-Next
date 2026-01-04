@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss';
+import type { Config } from 'tailwindcss'
 
 const config: Config = {
   content: [
@@ -10,8 +10,8 @@ const config: Config = {
     extend: {
       colors: {
         navy: {
-          800: '#1e3a8a',
-          900: '#1e293b',
+          '800': '#1e3a8a',
+          '900': '#1e293b',
         },
       },
       maxWidth: {
@@ -20,5 +20,5 @@ const config: Config = {
     },
   },
   plugins: [],
-};
-export default config;
+}
+export default config

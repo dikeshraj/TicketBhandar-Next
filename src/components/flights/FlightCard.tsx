@@ -32,7 +32,7 @@ export const FlightCard: React.FC<FlightCardProps> = ({ flight }) => {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-1 text-xs text-gray-600">
+          <div className="flex items-center gap-1 text-xs text-gray-600 justify-center">
             <span>📦 {flight.baggage.checkin} KG</span>
             <span>🎒 {flight.baggage.cabin} KG</span>
           </div>
@@ -67,7 +67,9 @@ export const FlightCard: React.FC<FlightCardProps> = ({ flight }) => {
             {flight.currency} {formatPrice(flight.price)}
           </div>
           <div className="text-xs text-gray-600">{flight.class}</div>
-          <div className="text-xs text-orange-600 font-medium">⏰ {flight.seatsLeft} seats left !</div>
+          <div className="text-xs text-orange-600 font-medium">
+            ⏰ {flight.seatsLeft} seats left !
+          </div>
         </div>
       </div>
     </div>

@@ -11,8 +11,8 @@ export function formatPrice(price: number, currency: string = 'NPR'): string {
   }).format(price);
 }
 
-export function formatCurrency(price: number): string {
-  return `₹ ${formatPrice(price)}`;
+export function formatCurrency(price: number, symbol: string = '₹'): string {
+  return `${symbol} ${formatPrice(price)}`;
 }
 
 export function formatDate(date: string | Date, format: string = 'dd MMM'): string {

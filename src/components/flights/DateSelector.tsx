@@ -3,13 +3,13 @@
 import React, { useState } from 'react';
 import { Calendar } from 'lucide-react';
 import { MOCK_DATE_PRICES } from '@/lib/constants';
-import { formatPrice, getDayName, formatDate } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils';
 
 export const DateSelector: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(MOCK_DATE_PRICES[1].date);
 
   return (
-    <div className="bg-white border-b border-gray-200">
+    <div className="bg-white border-b border-gray-200 sticky top-[73px] z-30">
       <div className="px-4 py-3">
         <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
           {MOCK_DATE_PRICES.map((datePrice) => (
@@ -23,7 +23,7 @@ export const DateSelector: React.FC = () => {
               }`}
             >
               <div className="text-xs font-medium">{datePrice.day}</div>
-              <div className="text-base font-bold">{formatDate(datePrice.date).split(' ')[0]}</div>
+              <div className="text-base font-bold">{datePrice.dayNum}</div>
               <div className="text-xs">₹ {formatPrice(datePrice.price)}</div>
             </button>
           ))}

@@ -69,5 +69,6 @@ export interface Flight {
 export interface DatePrice {
   date: string;
   day: string;
+  dayNum: number;
   price: number;
 }

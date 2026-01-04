@@ -31,7 +31,10 @@ export const BestFromNepal: React.FC = () => {
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
               <div className="absolute bottom-6 left-6 z-10">
-                <h3 className="text-3xl font-bold text-white">{dest.name}</h3>
+                <h3 className="text-3xl font-bold text-white mb-1">{dest.name}</h3>
+                {dest.description && (
+                  <p className="text-white/80 text-sm">{dest.description}</p>
+                )}
               </div>
             </div>
           </div>

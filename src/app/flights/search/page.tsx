@@ -17,15 +17,15 @@ export default function FlightSearchPage() {
         travelers={1}
         flightClass="Economy"
       />
-      
+
       <DateSelector />
-      
+
       <div className="px-4 py-4">
         {MOCK_FLIGHTS.map((flight) => (
           <FlightCard key={flight.id} flight={flight} />
         ))}
       </div>
-      
+
       <BottomNavigation />
     </div>
   );

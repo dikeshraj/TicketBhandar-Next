@@ -13,7 +13,6 @@ export class FlightService {
       // });
       // return await response.json();
       
-      // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 500));
       return MOCK_FLIGHTS;
     } catch (error) {
@@ -24,7 +23,6 @@ export class FlightService {
 
   static async getFlightDetails(id: string): Promise<Flight | null> {
     try {
-      // TODO: Replace with actual API call
       await new Promise(resolve => setTimeout(resolve, 300));
       return MOCK_FLIGHTS.find(f => f.id === id) || null;
     } catch (error) {
@@ -35,7 +33,6 @@ export class FlightService {
 
   static async bookFlight(flightId: string, passengers: any): Promise<any> {
     try {
-      // TODO: Implement actual booking API call
       const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.BOOK_FLIGHT}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

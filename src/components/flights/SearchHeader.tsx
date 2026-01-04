@@ -43,7 +43,7 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
 
         <div className="flex items-center justify-between">
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-1">
               <span className="text-xl font-bold">{from}</span>
               <span className="text-gray-400">→</span>
               <span className="text-xl font-bold">{to}</span>
