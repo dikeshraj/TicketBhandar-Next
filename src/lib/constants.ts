@@ -67,11 +67,11 @@ export const SERVICES: Service[] = [
 ];
 
 export const PARTNERS: Partner[] = [
-  { id: '1', name: 'SeatLinks', logo: 'SeatLinks', url: '#' },
-  { id: '2', name: 'One Go', logo: 'One Go', url: '#' },
-  { id: '3', name: 'BUDDHA AIR', logo: 'BUDDHA AIR', url: '#' },
-  { id: '4', name: 'NIRVANA', logo: 'NIRVANA', url: '#' },
-  { id: '5', name: 'SEALINKS', logo: 'SEALINKS', url: '#' },
+  { id: '1', name: 'SeatLinks', logo: '/images/partners/client1.png', url: '#' },
+  { id: '2', name: 'One Go', logo: '/images/partners/onego.png', url: '#' },
+  { id: '3', name: 'BUDDHA AIR', logo: '/images/partners/client2.png', url: '#' },
+  { id: '4', name: 'NIRVANA', logo: '/images/partners/nirvana.png', url: '#' },
+  { id: '5', name: 'SEALINKS', logo: '/images/partners/client3.png', url: '#' },
 ];
 
 export const SPECIAL_OFFERS: SpecialOffer[] = [

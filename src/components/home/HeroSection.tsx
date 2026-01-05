@@ -2,7 +2,16 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, ChevronLeft, ChevronRight, MapPin, Calendar, Users, Hotel, Package } from 'lucide-react';
+import {
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  MapPin,
+  Calendar,
+  Users,
+  Hotel,
+  Package,
+} from 'lucide-react';
 
 type TabType = 'round-trip' | 'one-way' | 'hotel' | 'packages' | 'visa' | 'car-hire';
 type PassengerType = 'regular' | 'student';
@@ -14,24 +23,24 @@ interface FormData {
   departDate: string;
   returnDate: string;
   travelers: string;
-  
+
   // Hotel fields
   destination: string;
   checkIn: string;
   checkOut: string;
   rooms: string;
   guests: string;
-  
+
   // Package fields
   packageDestination: string;
   packageDate: string;
   packageDuration: string;
-  
+
   // Visa fields
   visaCountry: string;
   visaType: string;
   travelDate: string;
-  
+
   // Car hire fields
   pickupLocation: string;
   dropoffLocation: string;
@@ -44,7 +53,7 @@ export const HeroSection: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeTab, setActiveTab] = useState<TabType>('round-trip');
   const [passengerType, setPassengerType] = useState<PassengerType>('regular');
-  
+
   const [formData, setFormData] = useState<FormData>({
     from: 'Kathmandu',
     to: 'London',
@@ -70,7 +79,7 @@ export const HeroSection: React.FC = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     switch (activeTab) {
       case 'round-trip':
       case 'one-way':
@@ -92,7 +101,7 @@ export const HeroSection: React.FC = () => {
   };
 
   const updateFormData = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   // Tab Configuration
@@ -107,12 +116,19 @@ export const HeroSection: React.FC = () => {
 
   return (
     <div className="relative bg-gradient-to-br from-blue-800 via-indigo-900 to-purple-900 overflow-hidden">
+      <div className="container">
       <div className="absolute inset-0 opacity-[0.15]">
         <div className="absolute left-0 bottom-0 w-full">
           <svg viewBox="0 0 1200 300" className="w-full h-auto" fill="currentColor">
-            <path d="M0,250 L50,180 L80,200 L100,160 L130,190 L150,140 L180,170 L200,120 L230,150 L250,100 L280,140 L300,80 L330,120 L350,70 L380,110 L400,60 L0,60 Z" className="text-white" />
+            <path
+              d="M0,250 L50,180 L80,200 L100,160 L130,190 L150,140 L180,170 L200,120 L230,150 L250,100 L280,140 L300,80 L330,120 L350,70 L380,110 L400,60 L0,60 Z"
+              className="text-white"
+            />
             <circle cx="120" cy="100" r="25" className="text-white" />
-            <path d="M500,250 L550,180 L580,200 L620,160 L650,190 L680,150 L710,180 L740,130 L770,170 L800,120 L500,120 Z" className="text-white" />
+            <path
+              d="M500,250 L550,180 L580,200 L620,160 L650,190 L680,150 L710,180 L740,130 L770,170 L800,120 L500,120 Z"
+              className="text-white"
+            />
             <rect x="900" y="200" width="40" height="50" className="text-white" />
             <path d="M920,200 L950,170 L980,200 Z" className="text-white" />
           </svg>
@@ -135,7 +151,7 @@ export const HeroSection: React.FC = () => {
         <ChevronRight size={24} />
       </button>
 
-      <div className="relative z-10 max-w-8xl mx-auto px-6 pt-12 pb-8">
+      <div className="relative z-10 max-w-8xl mx-auto pt-12 pb-8">
         {/* Hero Text */}
         <div className="mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 leading-tight">
@@ -178,10 +194,14 @@ export const HeroSection: React.FC = () => {
                       : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                   }`}
                 >
-                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                    passengerType === 'regular' ? 'border-pink-500' : 'border-gray-400'
-                  }`}>
-                    {passengerType === 'regular' && <div className="w-2 h-2 rounded-full bg-pink-500"></div>}
+                  <div
+                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                      passengerType === 'regular' ? 'border-pink-500' : 'border-gray-400'
+                    }`}
+                  >
+                    {passengerType === 'regular' && (
+                      <div className="w-2 h-2 rounded-full bg-pink-500"></div>
+                    )}
                   </div>
                   Regular
                 </button>
@@ -194,10 +214,14 @@ export const HeroSection: React.FC = () => {
                       : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                   }`}
                 >
-                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                    passengerType === 'student' ? 'border-pink-500' : 'border-gray-400'
-                  }`}>
-                    {passengerType === 'student' && <div className="w-2 h-2 rounded-full bg-pink-500"></div>}
+                  <div
+                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                      passengerType === 'student' ? 'border-pink-500' : 'border-gray-400'
+                    }`}
+                  >
+                    {passengerType === 'student' && (
+                      <div className="w-2 h-2 rounded-full bg-pink-500"></div>
+                    )}
                   </div>
                   Student Fare
                 </button>
@@ -432,7 +456,9 @@ export const HeroSection: React.FC = () => {
                 </select>
               </div>
               <div className="md:col-span-4">
-                <label className="block text-xs font-semibold text-gray-600 mb-1.5">Visa Type</label>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                  Visa Type
+                </label>
                 <select
                   value={formData.visaType}
                   onChange={(e) => updateFormData('visaType', e.target.value)}
@@ -524,11 +550,15 @@ export const HeroSection: React.FC = () => {
             className="w-full bg-blue-900 hover:bg-blue-800 text-white py-3.5 rounded-lg font-bold flex items-center justify-center gap-2 transition shadow-lg"
           >
             <Search size={20} />
-            {activeTab === 'round-trip' || activeTab === 'one-way' ? 'Search Flight' : 
-             activeTab === 'hotel' ? 'Search Hotel' :
-             activeTab === 'packages' ? 'Browse Packages' :
-             activeTab === 'visa' ? 'Apply for Visa' :
-             'Find Car'}
+            {activeTab === 'round-trip' || activeTab === 'one-way'
+              ? 'Search Flight'
+              : activeTab === 'hotel'
+              ? 'Search Hotel'
+              : activeTab === 'packages'
+              ? 'Browse Packages'
+              : activeTab === 'visa'
+              ? 'Apply for Visa'
+              : 'Find Car'}
           </button>
         </form>
 
@@ -544,6 +574,7 @@ export const HeroSection: React.FC = () => {
             />
           ))}
         </div>
+      </div>
       </div>
     </div>
   );

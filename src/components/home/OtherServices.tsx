@@ -5,7 +5,7 @@ import { SERVICES } from '@/lib/constants';
 
 export const OtherServices: React.FC = () => {
   return (
-    <section className="max-w-8xl mx-auto px-6 py-14">
+    <section className="container py-14">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-3xl font-bold text-gray-900">Other Services</h2>
         <button className="text-red-600 hover:text-red-700 font-semibold flex items-center gap-1 transition">

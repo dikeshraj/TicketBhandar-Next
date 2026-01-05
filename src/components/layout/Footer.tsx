@@ -8,9 +8,9 @@ import { siteConfig } from '@/config/site';
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-gray-50 pt-12 pb-6">
-      <div className="max-w-8xl mx-auto px-6">
+      <div className="container">
         {/* Visit Us Online */}
-        <div className="mb-10">
+       {/*  <div className="mb-10">
           <h3 className="text-lg font-bold mb-5 text-gray-900">Visit us online</h3>
           <div className="flex items-center gap-10 flex-wrap">
             <div className="text-blue-600 font-bold text-xl">Sea Links</div>
@@ -22,7 +22,7 @@ export const Footer: React.FC = () => {
             <div className="text-blue-700 font-bold text-xl">NIRVANA</div>
             <div className="text-blue-600 font-bold text-xl">SEALINKS</div>
           </div>
-        </div>
+        </div> */}
 
         {/* Connect With Us */}
         <div className="mb-10">
