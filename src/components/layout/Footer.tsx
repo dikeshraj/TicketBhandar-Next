@@ -13,7 +13,7 @@ export const Footer: React.FC = () => {
         <div className="mb-10">
           <h3 className="text-lg font-bold mb-5 text-gray-900">Visit us online</h3>
           <div className="flex items-center gap-10 flex-wrap">
-            <div className="text-blue-600 font-bold text-xl">SeatLinks</div>
+            <div className="text-blue-600 font-bold text-xl">Sea Links</div>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-blue-600 rounded-full"></div>
               <span className="font-bold text-xl text-gray-800">One Go</span>
@@ -93,7 +93,7 @@ export const Footer: React.FC = () => {
               <span className="text-blue-900 font-black text-xl">VISA</span>
             </div>
             <div className="px-6 py-2 bg-white rounded-lg border border-gray-200 shadow-sm">
-              <span className="text-green-600 font-black text-xl">Sewa</span>
+              <span className="text-green-600 font-black text-xl">e-Sewa</span>
             </div>
             <div className="px-6 py-2 bg-white rounded-lg border border-gray-200 shadow-sm">
               <span className="text-red-600 font-black text-xl">fonepay</span>
