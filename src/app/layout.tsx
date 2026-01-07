@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './styles/globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { HeaderUser } from '@/types/user';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,16 +22,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // 🔐 Later this will come from auth (NextAuth / API)
+  const user: HeaderUser | null = null;
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />
-        <main className="min-h-screen bg-white">{children}</main>
+        <Header user={user} />
+        <main className="min-h-screen bg-[#F7F7F7]">{children}</main>
         <Footer />
       </body>
     </html>
