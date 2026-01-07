@@ -7,7 +7,7 @@ interface AdsBannerProps {
 export const AdsBanner: React.FC<AdsBannerProps> = ({ type = 'kathmandu' }) => {
   if (type === 'kathmandu') {
     return (
-      <div className="max-w-8xl mx-auto px-6 py-8">
+      <div className="container py-8">
         <div className="bg-gradient-to-r from-yellow-50 via-orange-50 to-yellow-50 rounded-2xl px-8 md:px-12 py-10 relative overflow-hidden shadow-lg">
           <div className="absolute top-0 right-0 w-80 h-80 bg-orange-200/20 rounded-full -mr-40 -mt-40"></div>
 
@@ -34,7 +34,7 @@ export const AdsBanner: React.FC<AdsBannerProps> = ({ type = 'kathmandu' }) => {
   }
 
   return (
-    <div className="max-w-8xl mx-auto px-6 py-8">
+    <div className="container py-8">
       <div className="bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 rounded-2xl px-8 md:px-12 py-10 relative overflow-hidden shadow-lg">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="text-7xl md:text-8xl">✈️</div>

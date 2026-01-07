@@ -2,20 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @layer base {
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
+
+   *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
   
   html {
     -webkit-text-size-adjust: 100%;
+     scroll-behavior: smooth;
   }
   
   body {
     @apply bg-white text-gray-900 antialiased;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
   }
 }
 
@@ -37,6 +48,40 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
+
+@layer components {
+  .container {
+    @apply w-full mx-auto px-4;
+    max-width: 1280px;
+  }
+
+  @screen sm {
+    .container {
+      @apply px-6;
+    }
+  }
+  @screen md{
+    .container {
+      @apply px-12;
+    }
+  }
+  @screen lg {
+    .container {
+      @apply px-14;
+    }
+  }
+
+  .section {
+    @apply w-full;
+  }
+
+  .section-inner {
+    @apply mx-auto px-4;
+    max-width: 1280px;
+  }
+}
+
+
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
