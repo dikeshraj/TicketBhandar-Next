@@ -5,7 +5,7 @@ import { PARTNERS } from '@/lib/constants';
 
 export const ClientSection: React.FC = () => {
   return (
-    <section className="bg-white py-14">
+    <section className="py-14">
       <div className="container">
         <h2 className="text-2xl font-bold text-gray-900 mb-8">Visit us online</h2>
 

@@ -181,70 +181,31 @@ export const HeroSection: React.FC = () => {
         {/* booking tab/form starts*/}
         <div className="absolute h-full w-max max-w-[1280px] px-4 left-1/2 -translate-x-1/2 top-[60%]">
           {/* Tabs Row */}
-          <div className="flex gap-3 mb-4 flex-wrap">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition ${
-                  activeTab === tab.id
-                    ? 'bg-white text-gray-700 shadow-lg scale-105'
-                    : 'bg-white/10 backdrop-blur-sm text-white hover:bg-white/20'
-                }`}
-              >
-                <span>{tab.icon}</span> {tab.label}
-              </button>
-            ))}
+          <div className="bg-white shadow-2xl rounded-2xl p-6 absolute top-[-15%]">
+            <div className="flex gap-3 mb-4 flex-wrap">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition ${
+                    activeTab === tab.id
+                      ? 'bg-white text-gray-700 shadow-lg scale-105'
+                      : 'bg-white/10 backdrop-blur-sm text-black hover:bg-white/20'
+                  }`}
+                >
+                  <span>{tab.icon}</span> {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
+          
 
           {/* Search Card */}
           <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-2xl p-6">
             {/* Flight Forms (Round Trip & One Way) */}
             {(activeTab === 'round-trip' || activeTab === 'one-way') && (
               <>
-                {/* Passenger Type */}
-                <div className="flex gap-3 mb-5 flex-wrap">
-                  <button
-                    type="button"
-                    onClick={() => setPassengerType('regular')}
-                    className={`flex items-center gap-2 px-5 py-2 rounded-lg font-medium transition ${
-                      passengerType === 'regular'
-                        ? 'bg-pink-100 text-pink-600 border border-pink-400'
-                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                        passengerType === 'regular' ? 'border-pink-500' : 'border-gray-400'
-                      }`}
-                    >
-                      {passengerType === 'regular' && (
-                        <div className="w-2 h-2 rounded-full bg-pink-500"></div>
-                      )}
-                    </div>
-                    Regular
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPassengerType('student')}
-                    className={`flex items-center gap-2 px-5 py-2 rounded-lg font-medium transition ${
-                      passengerType === 'student'
-                        ? 'bg-pink-100 text-pink-600 border border-pink-400'
-                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                        passengerType === 'student' ? 'border-pink-500' : 'border-gray-400'
-                      }`}
-                    >
-                      {passengerType === 'student' && (
-                        <div className="w-2 h-2 rounded-full bg-pink-500"></div>
-                      )}
-                    </div>
-                    Student Fare
-                  </button>
-                </div>
+               
 
                 {/* Flight Search Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
@@ -321,6 +282,52 @@ export const HeroSection: React.FC = () => {
                     </select>
                   </div>
                 </div>
+                {/* Flight Search Fields ends*/}
+
+                {/* Passenger Type */}
+                <div className="flex gap-3 mb-5 flex-wrap">
+                  <button
+                    type="button"
+                    onClick={() => setPassengerType('regular')}
+                    className={`flex items-center gap-2 px-5 py-2 rounded-lg font-medium transition ${
+                      passengerType === 'regular'
+                        ? 'bg-pink-100 text-pink-600 border border-pink-400'
+                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    <div
+                      className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                        passengerType === 'regular' ? 'border-pink-500' : 'border-gray-400'
+                      }`}
+                    >
+                      {passengerType === 'regular' && (
+                        <div className="w-2 h-2 rounded-full bg-pink-500"></div>
+                      )}
+                    </div>
+                    Regular
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPassengerType('student')}
+                    className={`flex items-center gap-2 px-5 py-2 rounded-lg font-medium transition ${
+                      passengerType === 'student'
+                        ? 'bg-pink-100 text-pink-600 border border-pink-400'
+                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    <div
+                      className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                        passengerType === 'student' ? 'border-pink-500' : 'border-gray-400'
+                      }`}
+                    >
+                      {passengerType === 'student' && (
+                        <div className="w-2 h-2 rounded-full bg-pink-500"></div>
+                      )}
+                    </div>
+                    Student Fare
+                  </button>
+                </div>
+                {/* Passenger Type ends*/}
               </>
             )}
 
