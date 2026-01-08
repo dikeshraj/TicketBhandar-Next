@@ -83,6 +83,8 @@ export const SPECIAL_OFFERS: SpecialOffer[] = [
     internationalFlights: 100,
     domesticFlights: 200,
     category: 'flight',
+    image: '/images/offers/offer1.png',
+   
   },
   {
     id: '2',
@@ -92,6 +94,8 @@ export const SPECIAL_OFFERS: SpecialOffer[] = [
     internationalFlights: 100,
     domesticFlights: 200,
     category: 'flight',
+    image: '/images/offers/offer2.png',
+   
   },
 ];
 

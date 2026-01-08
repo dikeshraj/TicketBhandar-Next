@@ -1,4 +1,6 @@
 import React from 'react';
+import { ADS_BANNERS } from '@/config/adsBanner';
+import Image from 'next/image';
 
 interface AdsBannerProps {
   type?: 'kathmandu' | 'fare';
@@ -6,9 +8,15 @@ interface AdsBannerProps {
 
 export const AdsBanner: React.FC<AdsBannerProps> = ({ type = 'kathmandu' }) => {
   if (type === 'kathmandu') {
+    const banner = ADS_BANNERS[type];
     return (
-      <div className="container py-8">
-        <div className="bg-gradient-to-r from-yellow-50 via-orange-50 to-yellow-50 rounded-2xl px-8 md:px-12 py-10 relative overflow-hidden shadow-lg">
+      <div className="container">
+        <div className="relative w-full h-[280px]">
+          <Image src={banner.image} alt={banner.alt} fill className="object-contain" priority />
+        </div>
+        
+
+        {/* <div className="bg-gradient-to-r from-yellow-50 via-orange-50 to-yellow-50 rounded-2xl px-8 md:px-12 py-10 relative overflow-hidden shadow-lg">
           <div className="absolute top-0 right-0 w-80 h-80 bg-orange-200/20 rounded-full -mr-40 -mt-40"></div>
 
           <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
@@ -28,14 +36,19 @@ export const AdsBanner: React.FC<AdsBannerProps> = ({ type = 'kathmandu' }) => {
               <div className="text-3xl md:text-4xl font-black text-gray-800">KATHMANDU</div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     );
   }
-
-  return (
-    <div className="container py-8">
-      <div className="bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 rounded-2xl px-8 md:px-12 py-10 relative overflow-hidden shadow-lg">
+  if (type === 'fare') {
+    const banner = ADS_BANNERS[type];
+    return (
+      <div className="container">
+         <div className="relative w-full h-[280px]">
+            <Image src={banner.image} alt={banner.alt} fill className="object-contain" priority />
+         </div>
+      
+        {/* <div className="bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 rounded-2xl px-8 md:px-12 py-10 relative overflow-hidden shadow-lg">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="text-7xl md:text-8xl">✈️</div>
           <div className="text-center flex-1">
@@ -55,7 +68,8 @@ export const AdsBanner: React.FC<AdsBannerProps> = ({ type = 'kathmandu' }) => {
             </div>
           </div>
         </div>
+      </div> */}
       </div>
-    </div>
-  );
+    );
+  }
 };
