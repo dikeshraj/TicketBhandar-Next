@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { Poppins } from 'next/font/google';
 import './styles/globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { HeaderUser } from '@/types/user';
 
-const inter = Inter({ subsets: ['latin'] });
+// const inter = Inter({ subsets: ['latin'] });
+const poppins = Poppins({ weight: ['400', '500', '600', '700'], subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Ticket Bhandar - Book Cheap Flights from Nepal',
@@ -28,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={poppins.className}>
         <Header user={user} />
         <main className="min-h-screen bg-[#F7F7F7]">{children}</main>
         <Footer />

@@ -2,18 +2,28 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  MapPin,
-  Calendar,
-  Users,
-  Hotel,
-  Package,
-} from 'lucide-react';
+import { Search, MapPin, Calendar, Users, Hotel, Package } from 'lucide-react';
+import Image from 'next/image';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+// Tab types for top-level navigation
+type TabType =
+  | 'international-flight'
+  | 'domestic-flight'
+  | 'insurance'
+  | 'holiday-packages'
+  | 'heli'
+  | 'visa'
+  | 'car-hire'
+  | 'hotel'; // include if you plan to show hotel form
 
-type TabType = 'round-trip' | 'one-way' | 'hotel' | 'packages' | 'visa' | 'car-hire';
+// Flight sub-type (for internal use in flight forms)
+type FlightType = 'one-way' | 'round-trip' | 'multi-city';
+
+// Original tab types (for backward compatibility in form logic)
+type LegacyTabType = 'round-trip' | 'one-way' | 'hotel' | 'packages' | 'visa' | 'car-hire';
+
 type PassengerType = 'regular' | 'student';
 
 interface FormData {
@@ -48,10 +58,19 @@ interface FormData {
   dropoffDate: string;
 }
 
+// Define tab config with icon and label
+interface TabConfig {
+  id: TabType;
+  label: string;
+  icon: string;
+  isFlight?: boolean;
+}
+
 export const HeroSection: React.FC = () => {
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [activeTab, setActiveTab] = useState<TabType>('round-trip');
+  const [activeTab, setActiveTab] = useState<TabType>('international-flight');
+  const [flightType, setFlightType] = useState<FlightType>('round-trip');
   const [passengerType, setPassengerType] = useState<PassengerType>('regular');
 
   const [formData, setFormData] = useState<FormData>({
@@ -81,22 +100,28 @@ export const HeroSection: React.FC = () => {
     e.preventDefault();
 
     switch (activeTab) {
-      case 'round-trip':
-      case 'one-way':
+      case 'international-flight':
+      case 'domestic-flight':
         router.push('/flights/search');
         break;
-      case 'hotel':
+      /*  case 'hotel':
         router.push('/hotels/search');
-        break;
-      case 'packages':
+        break; */
+      case 'holiday-packages':
         router.push('/packages');
+        break;
+      case 'insurance':
+        router.push('/insurance');
+        break;
+      case 'heli':
+        router.push('/heli');
         break;
       case 'visa':
         router.push('/visa');
         break;
-      case 'car-hire':
+      /* case 'car-hire':
         router.push('/car-hire');
-        break;
+        break; */
     }
   };
 
@@ -104,110 +129,154 @@ export const HeroSection: React.FC = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Tab Configuration
-  const tabs = [
-    { id: 'round-trip' as TabType, label: 'Round Trip', icon: '✈️' },
-    { id: 'one-way' as TabType, label: 'One Way', icon: '✈️' },
-    { id: 'hotel' as TabType, label: 'Hotel', icon: '🏨' },
-    { id: 'packages' as TabType, label: 'Holiday Packages', icon: '🎄' },
-    { id: 'visa' as TabType, label: 'Visa', icon: '📄' },
-    { id: 'car-hire' as TabType, label: 'Car Hire', icon: '🚗' },
+  // Top-level tabs (visible in UI)
+  const tabs: TabConfig[] = [
+    {
+      id: 'international-flight',
+      label: 'International Flight',
+      icon: '/images/icons/international.png',
+      isFlight: true,
+    },
+    {
+      id: 'domestic-flight',
+      label: 'Domestic Flight',
+      icon: '/images/icons/domestic.png',
+      isFlight: true,
+    },
+    { id: 'insurance', label: 'Insurance', icon: '/images/icons/insurance.png' },
+    /*  { id: 'hotel', label: 'Hotel', icon: '🏨' }, */
+    { id: 'holiday-packages', label: 'Holiday Packages', icon: '/images/icons/holiday.png' },
+    { id: 'heli', label: 'Heli', icon: '/images/icons/heli.png' },
+    { id: 'visa', label: 'Visa', icon: '/images/icons/visa.png' },
+    /*   { id: 'car-hire', label: 'Car Hire', icon: '🚗' }, */
   ];
+
+  // Helper: Map new tab to legacy form context (for rendering)
+  const getFormContext = (): LegacyTabType => {
+    if (activeTab === 'international-flight' || activeTab === 'domestic-flight') {
+      return flightType === 'one-way' ? 'one-way' : 'round-trip';
+    }
+    if (activeTab === 'holiday-packages') return 'packages';
+    return activeTab as LegacyTabType;
+  };
+
+  const currentForm = getFormContext();
 
   return (
     <div
       className="relative bg-cover bg-center bg-no-repeat min-h-[85vh] pb-48"
       style={{ backgroundImage: "url('/images/hero-background.png')" }}
     >
-     {/*  <div className="absolute inset-0 bg-black/10"></div> */}
       <div className="container">
-        {/* <div className="absolute inset-0 opacity-[0.15]"> */}
-        {/* <div className="absolute left-0 bottom-0 w-full">
-            <svg viewBox="0 0 1200 300" className="w-full h-auto" fill="currentColor">
-              <path
-                d="M0,250 L50,180 L80,200 L100,160 L130,190 L150,140 L180,170 L200,120 L230,150 L250,100 L280,140 L300,80 L330,120 L350,70 L380,110 L400,60 L0,60 Z"
-                className="text-white"
-              />
-              <circle cx="120" cy="100" r="25" className="text-white" />
-              <path
-                d="M500,250 L550,180 L580,200 L620,160 L650,190 L680,150 L710,180 L740,130 L770,170 L800,120 L500,120 Z"
-                className="text-white"
-              />
-              <rect x="900" y="200" width="40" height="50" className="text-white" />
-              <path d="M920,200 L950,170 L980,200 Z" className="text-white" />
-            </svg>
-          </div> */}
-        {/* <div className="absolute right-20 top-10 text-white text-8xl">⛩️</div>
-          <div className="absolute right-80 top-32 text-white text-6xl">🛕</div> */}
-        {/*  </div> */}
-
-        {/* Carousel Navigation */}
-        {/* <button
-          onClick={() => setCurrentSlide((prev) => (prev - 1 + 3) % 3)}
-          className="absolute left-5 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-2.5 rounded-full transition"
-        >
-          <ChevronLeft size={24} />
-        </button>
-        <button
-          onClick={() => setCurrentSlide((prev) => (prev + 1) % 3)}
-          className="absolute right-5 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-2.5 rounded-full transition"
-        >
-          <ChevronRight size={24} />
-        </button> */}
-
-        <div className="z-10 mx-auto pt-12 pb-4">
-          {/* Hero Text */}
+        <div className="z-10 mx-auto pt-8 pb-4">
           <div className="mb-4">
-            <h1 className="text-4xl md:text-5xl font-bold text-black mb-2 leading-tight">
-              From Nepal to the World – <span className="text-red-500">Easy</span>
+            <h1 className="text-3xl md:text-4xl font-medium text-black leading-relaxed">
+              From Nepal to the World – <span className="text-secondary-dark">Easy</span>
             </h1>
-            <p className="text-xl text-slate-800">Book cheap flights other sites simply can't</p>
-            <div className="inline-block mt-1 text-red-500 text-xl font-bold">Ticket</div>
+            <p className="text-lg text-black">
+              Book cheap flights other sites simply can't
+              <br />
+              find.
+            </p>
+            <div className="block mt-[-2rem] text-secondary-default text-3xl traxking-wide font-semibold">
+              Ticket
+            </div>
           </div>
-
-          {/* Carousel Indicators */}
-          {/*  <div className="flex justify-center gap-2 mt-6">
-            {[0, 1, 2].map((index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`h-1.5 rounded-full transition-all ${
-                  currentSlide === index ? 'bg-white w-8' : 'bg-white/40 w-1.5'
-                }`}
-              />
-            ))}
-          </div> */}
         </div>
-        {/* booking tab/form starts*/}
+
+        {/* booking tab/form starts */}
         <div className="absolute h-full w-max max-w-[1280px] px-4 left-1/2 -translate-x-1/2 top-[60%]">
           {/* Tabs Row */}
-          <div className="bg-white shadow-2xl rounded-2xl p-6 absolute top-[-15%]">
-            <div className="flex gap-3 mb-4 flex-wrap">
+          <div className="bg-white shadow-2xl rounded-[16px] p-6 absolute top-[-10%] left-1/2 -translate-x-1/2 z-10">
+            <div className="flex flex-row gap-2 items-center justify-between w-full h-full">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition ${
+                  className={`flex flex-col items-center gap-1 px-2 py-2 text-sm font-normal text-text-default transition ${
                     activeTab === tab.id
-                      ? 'bg-white text-gray-700 shadow-lg scale-105'
-                      : 'bg-white/10 backdrop-blur-sm text-black hover:bg-white/20'
+                      ? 'bg-background'
+                      : 'bg-white text-gray-600 hover:bg-gray-100'
                   }`}
                 >
-                  <span>{tab.icon}</span> {tab.label}
+                  <Image
+                    src={tab.icon}
+                    alt={tab.label}
+                    width={35}
+                    height={35}
+                    className="aspect-square"
+                  />
+                  <span className="whitespace-nowrap">{tab.label}</span>
                 </button>
               ))}
             </div>
           </div>
-          
 
-          {/* Search Card */}
-          <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-2xl p-6">
-            {/* Flight Forms (Round Trip & One Way) */}
-            {(activeTab === 'round-trip' || activeTab === 'one-way') && (
+          {/* Form Wrapper */}
+          <form
+            onSubmit={handleSearch}
+            className="relative bg-white rounded-2xl shadow-2xl p-6 pt-20"
+          >
+            {/* Flight Type Toggle — only for flight tabs */}
+
+            {tabs.find((t) => t.id === activeTab)?.isFlight && (
+              <FormGroup row className="mb-5 gap-3">
+                {(['one-way', 'round-trip', 'multi-city'] as FlightType[]).map((type) => {
+                  const label =
+                    type === 'one-way'
+                      ? 'One Way'
+                      : type === 'round-trip'
+                      ? 'Round Trip'
+                      : 'Multi City';
+
+                  return (
+                    <FormControlLabel
+                      key={type}
+                      className={`rounded-full px-3 py-1.5 cursor-pointer transition
+            ${
+              flightType === type
+                ? 'bg-background-light rounded-full text-text-default text-sm'
+                : ' text-text-default text-sm hover:bg-gray-100'
+            }
+          `}
+                      control={
+                        <Checkbox
+                          checked={flightType === type}
+                          onChange={() => setFlightType(type)}
+                          className="hidden" // hide default checkbox UI
+                        />
+                      }
+                      label={label}
+                    />
+                  );
+                })}
+              </FormGroup>
+            )}
+            {/* {tabs.find((t) => t.id === activeTab)?.isFlight && (
+              <div className="flex justify-start gap-3 mb-5 ">
+                {(['one-way', 'round-trip', 'multi-city'] as FlightType[]).map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setFlightType(type)}
+                    className={`px-5 py-2 rounded-lg fontnormal text-text-default transition ${
+                      flightType === type
+                        ? 'bg-pink-100 text-pink-600 border border-pink-400'
+                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    {type === 'one-way'
+                      ? 'One Way'
+                      : type === 'round-trip'
+                      ? 'Round Trip'
+                      : 'Multi City'}
+                  </button>
+                ))}
+              </div>
+            )} */}
+            {/* Render forms based on currentForm (legacy mapping) */}
+            {(currentForm === 'round-trip' || currentForm === 'one-way') && (
               <>
-               
-
-                {/* Flight Search Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
                   <div className="md:col-span-3">
                     <label className="block text-xs font-semibold text-gray-600 mb-1.5">
@@ -250,7 +319,7 @@ export const HeroSection: React.FC = () => {
                       required
                     />
                   </div>
-                  {activeTab === 'round-trip' && (
+                  {currentForm === 'round-trip' && (
                     <div className="md:col-span-2">
                       <label className="block text-xs font-semibold text-gray-600 mb-1.5">
                         <Calendar className="inline w-4 h-4 mr-1" />
@@ -265,7 +334,7 @@ export const HeroSection: React.FC = () => {
                       />
                     </div>
                   )}
-                  <div className={activeTab === 'one-way' ? 'md:col-span-4' : 'md:col-span-2'}>
+                  <div className={currentForm === 'one-way' ? 'md:col-span-4' : 'md:col-span-2'}>
                     <label className="block text-xs font-semibold text-gray-600 mb-1.5">
                       <Users className="inline w-4 h-4 mr-1" />
                       Travelers
@@ -282,9 +351,7 @@ export const HeroSection: React.FC = () => {
                     </select>
                   </div>
                 </div>
-                {/* Flight Search Fields ends*/}
 
-                {/* Passenger Type */}
                 <div className="flex gap-3 mb-5 flex-wrap">
                   <button
                     type="button"
@@ -327,12 +394,9 @@ export const HeroSection: React.FC = () => {
                     Student Fare
                   </button>
                 </div>
-                {/* Passenger Type ends*/}
               </>
             )}
-
-            {/* Hotel Form */}
-            {activeTab === 'hotel' && (
+            {/*  {currentForm === 'hotel' && (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
                 <div className="md:col-span-4">
                   <label className="block text-xs font-semibold text-gray-600 mb-1.5">
@@ -404,10 +468,8 @@ export const HeroSection: React.FC = () => {
                   </select>
                 </div>
               </div>
-            )}
-
-            {/* Holiday Packages Form */}
-            {activeTab === 'packages' && (
+            )} */}
+            {currentForm === 'packages' && (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
                 <div className="md:col-span-5">
                   <label className="block text-xs font-semibold text-gray-600 mb-1.5">
@@ -459,9 +521,7 @@ export const HeroSection: React.FC = () => {
                 </div>
               </div>
             )}
-
-            {/* Visa Form */}
-            {activeTab === 'visa' && (
+            {currentForm === 'visa' && (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
                 <div className="md:col-span-5">
                   <label className="block text-xs font-semibold text-gray-600 mb-1.5">
@@ -513,9 +573,7 @@ export const HeroSection: React.FC = () => {
                 </div>
               </div>
             )}
-
-            {/* Car Hire Form */}
-            {activeTab === 'car-hire' && (
+            {currentForm === 'car-hire' && (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
                 <div className="md:col-span-3">
                   <label className="block text-xs font-semibold text-gray-600 mb-1.5">
@@ -571,26 +629,26 @@ export const HeroSection: React.FC = () => {
                 </div>
               </div>
             )}
-
             {/* Search Button */}
             <button
               type="submit"
-              className="w-full bg-blue-900 hover:bg-blue-800 text-white py-3.5 rounded-lg font-bold flex items-center justify-center gap-2 transition shadow-lg"
+              className="absolute right-8 -bottom-6 w-max bg-primary-default hover:bg-secondary-dark text-white py-4 px-8 rounded-[12px] text-base font-medium flex items-center justify-center  transition shadow-lg"
             >
-              <Search size={20} />
-              {activeTab === 'round-trip' || activeTab === 'one-way'
+              {currentForm === 'round-trip' || currentForm === 'one-way'
                 ? 'Search Flight'
-                : activeTab === 'hotel'
+                : currentForm === 'hotel'
                 ? 'Search Hotel'
-                : activeTab === 'packages'
+                : currentForm === 'packages'
                 ? 'Browse Packages'
-                : activeTab === 'visa'
+                : currentForm === 'visa'
                 ? 'Apply for Visa'
                 : 'Find Car'}
+
+              <Search size={20} className="ml-4" />
             </button>
           </form>
         </div>
-        {/* booking tab/form ends*/}
+        {/* booking tab/form ends */}
       </div>
     </div>
   );
