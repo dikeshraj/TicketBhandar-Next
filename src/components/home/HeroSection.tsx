@@ -1,12 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, MapPin, Calendar, Users, Hotel, Package } from 'lucide-react';
 import Image from 'next/image';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { AutocompleteInput } from '@/components/ui/AutocompleteInput';
+import 'react-day-picker/dist/style.css';
+import { CustomDay } from '@/components/customDaypicker/CustomDay';
+import { DayPicker } from 'react-day-picker';
+
 // Tab types for top-level navigation
 type TabType =
   | 'international-flight'
@@ -16,20 +21,29 @@ type TabType =
   | 'heli'
   | 'visa'
   | 'car-hire'
-  | 'hotel'; // include if you plan to show hotel form
+  | 'hotel';
 
 // Flight sub-type (for internal use in flight forms)
 type FlightType = 'one-way' | 'round-trip' | 'multi-city';
 
-// Original tab types (for backward compatibility in form logic)
-type LegacyTabType = 'round-trip' | 'one-way' | 'hotel' | 'packages' | 'visa' | 'car-hire';
-
 type PassengerType = 'regular' | 'student';
+
+const cityOptions = [
+  'Kathmandu',
+  'Pokhara',
+  'Lalitpur',
+  'Bhaktapur',
+  'London',
+  'Paris',
+  'New York',
+  'Tokyo',
+];
 
 interface FormData {
   // Flight fields
-  from: string;
-  to: string;
+  // from/to separated
+  /* from: string;
+  to: string; */
   departDate: string;
   returnDate: string;
   travelers: string;
@@ -72,10 +86,12 @@ export const HeroSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('international-flight');
   const [flightType, setFlightType] = useState<FlightType>('round-trip');
   const [passengerType, setPassengerType] = useState<PassengerType>('regular');
+  const [departCalendarOpen, setDepartCalendarOpen] = useState(false);
+  const [returnCalendarOpen, setReturnCalendarOpen] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
-    from: 'Kathmandu',
-    to: 'London',
+    /* from: 'Kathmandu',
+    to: 'London', */
     departDate: '',
     returnDate: '',
     travelers: '1',
@@ -129,6 +145,25 @@ export const HeroSection: React.FC = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      // Only close if click is outside calendar AND input
+      if (!target.closest('.rdp') && !target.closest('[placeholder*="date"]')) {
+        setDepartCalendarOpen(false);
+        setReturnCalendarOpen(false);
+      }
+    };
+
+    if (departCalendarOpen || returnCalendarOpen) {
+      document.addEventListener('click', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [departCalendarOpen, returnCalendarOpen]);
+
   // Top-level tabs (visible in UI)
   const tabs: TabConfig[] = [
     {
@@ -150,17 +185,6 @@ export const HeroSection: React.FC = () => {
     { id: 'visa', label: 'Visa', icon: '/images/icons/visa.png' },
     /*   { id: 'car-hire', label: 'Car Hire', icon: '🚗' }, */
   ];
-
-  // Helper: Map new tab to legacy form context (for rendering)
-  const getFormContext = (): LegacyTabType => {
-    if (activeTab === 'international-flight' || activeTab === 'domestic-flight') {
-      return flightType === 'one-way' ? 'one-way' : 'round-trip';
-    }
-    if (activeTab === 'holiday-packages') return 'packages';
-    return activeTab as LegacyTabType;
-  };
-
-  const currentForm = getFormContext();
 
   return (
     <div
@@ -185,9 +209,9 @@ export const HeroSection: React.FC = () => {
         </div>
 
         {/* booking tab/form starts */}
-        <div className="absolute h-full w-max max-w-[1280px] px-4 left-1/2 -translate-x-1/2 top-[60%]">
+        <div className="absolute h-full w-full max-w-[1280px] px-6 left-1/2 -translate-x-1/2 top-[60%]">
           {/* Tabs Row */}
-          <div className="bg-white shadow-2xl rounded-[16px] p-6 absolute top-[-10%] left-1/2 -translate-x-1/2 z-10">
+          <div className="bg-white shadow-2xl rounded-[16px] p-6 absolute top-[-13%] left-1/2 -translate-x-1/2 z-10">
             <div className="flex flex-row gap-2 items-center justify-between w-full h-full">
               {tabs.map((tab) => (
                 <button
@@ -195,7 +219,7 @@ export const HeroSection: React.FC = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex flex-col items-center gap-1 px-2 py-2 text-sm font-normal text-text-default transition ${
                     activeTab === tab.id
-                      ? 'bg-background'
+                      ? 'bg-background-default'
                       : 'bg-white text-gray-600 hover:bg-gray-100'
                   }`}
                 >
@@ -215,12 +239,11 @@ export const HeroSection: React.FC = () => {
           {/* Form Wrapper */}
           <form
             onSubmit={handleSearch}
-            className="relative bg-white rounded-2xl shadow-2xl p-6 pt-20"
+            className="relative bg-white rounded-2xl shadow-2xl px-8 pb-4 pt-20"
           >
             {/* Flight Type Toggle — only for flight tabs */}
-
             {tabs.find((t) => t.id === activeTab)?.isFlight && (
-              <FormGroup row className="mb-5 gap-3">
+              <FormGroup row className="mb-4 gap-3">
                 {(['one-way', 'round-trip', 'multi-city'] as FlightType[]).map((type) => {
                   const label =
                     type === 'one-way'
@@ -229,120 +252,184 @@ export const HeroSection: React.FC = () => {
                       ? 'Round Trip'
                       : 'Multi City';
 
+                  const isChecked = flightType === type;
+
                   return (
                     <FormControlLabel
                       key={type}
-                      className={`rounded-full px-3 py-1.5 cursor-pointer transition
-            ${
-              flightType === type
-                ? 'bg-background-light rounded-full text-text-default text-sm'
-                : ' text-text-default text-sm hover:bg-gray-100'
-            }
-          `}
+                      className="flex items-center gap-2"
                       control={
                         <Checkbox
-                          checked={flightType === type}
+                          checked={isChecked}
                           onChange={() => setFlightType(type)}
-                          className="hidden" // hide default checkbox UI
+                          sx={{
+                            padding: 0,
+                            color: '#D1D5DB', // gray-300
+                            '&.Mui-checked': {
+                              color: '#EF4444', // red-500 (match screenshot)
+                            },
+                            '& .MuiSvgIcon-root': {
+                              fontSize: 20,
+                              borderRadius: '50%', // 👈 rounded checkbox
+                            },
+                          }}
                         />
                       }
-                      label={label}
+                      label={<span className="text-sm text-text-default ml-0 mr-0">{label}</span>}
                     />
                   );
                 })}
               </FormGroup>
             )}
-            {/* {tabs.find((t) => t.id === activeTab)?.isFlight && (
-              <div className="flex justify-start gap-3 mb-5 ">
-                {(['one-way', 'round-trip', 'multi-city'] as FlightType[]).map((type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => setFlightType(type)}
-                    className={`px-5 py-2 rounded-lg fontnormal text-text-default transition ${
-                      flightType === type
-                        ? 'bg-pink-100 text-pink-600 border border-pink-400'
-                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    {type === 'one-way'
-                      ? 'One Way'
-                      : type === 'round-trip'
-                      ? 'Round Trip'
-                      : 'Multi City'}
-                  </button>
-                ))}
-              </div>
-            )} */}
-            {/* Render forms based on currentForm (legacy mapping) */}
-            {(currentForm === 'round-trip' || currentForm === 'one-way') && (
+
+            {/* Render forms directly based on activeTab */}
+            {(activeTab === 'international-flight' || activeTab === 'domestic-flight') && (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
-                  <div className="md:col-span-3">
-                    <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                      <MapPin className="inline w-4 h-4 mr-1" />
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                  <div className="md:col-span-1 border border-border-blue-50 rounded-[10px] p-4">
+                    <label className="block text-xs font-medium text-text-default mb-1.5">
+                      {/* <MapPin className="inline w-4 h-4 mr-1" /> */}
                       From
                     </label>
-                    <input
+                    <AutocompleteInput field="from" options={cityOptions} placeholder="Kathmandu" />
+
+                    {/* <input
                       type="text"
                       value={formData.from}
                       onChange={(e) => updateFormData('from', e.target.value)}
                       placeholder="Kathmandu"
-                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm font-medium"
+                      className="w-full border border-none focus:border-blue-500 focus:outline-none text-sm font-medium"
                       required
-                    />
+                    /> */}
                   </div>
-                  <div className="md:col-span-3">
+                  <div className="md:col-span-1 border border-border-blue-50 rounded-[10px] p-4">
                     <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                      <MapPin className="inline w-4 h-4 mr-1" />
+                      {/* <MapPin className="inline w-4 h-4 mr-1" /> */}
                       To
                     </label>
-                    <input
+                    <AutocompleteInput field="to" options={cityOptions} placeholder="London" />
+                    {/* <input
                       type="text"
                       value={formData.to}
                       onChange={(e) => updateFormData('to', e.target.value)}
                       placeholder="London"
-                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm font-medium"
+                      className="w-full border-none rounded-lg focus:border-blue-500 focus:outline-none text-sm font-medium"
                       required
-                    />
+                    /> */}
                   </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                      <Calendar className="inline w-4 h-4 mr-1" />
-                      Depart
-                    </label>
-                    <input
-                      type="date"
-                      value={formData.departDate}
-                      onChange={(e) => updateFormData('departDate', e.target.value)}
-                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm"
-                      required
-                    />
-                  </div>
-                  {currentForm === 'round-trip' && (
-                    <div className="md:col-span-2">
+                  {/* --- START: REPLACED DATE PICKER SECTION --- */}
+                  {/* REPLACED DATE PICKER SECTION */}
+                  <div className="md:col-span-1 flex flex-row flex-nowrap border border-border-blue-50 rounded-[10px] p-4 relative">
+                    {/* Departure */}
+                    <div className="flex-1 mr-2">
                       <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                        <Calendar className="inline w-4 h-4 mr-1" />
-                        Return
+                        Depart
                       </label>
                       <input
-                        type="date"
-                        value={formData.returnDate}
-                        onChange={(e) => updateFormData('returnDate', e.target.value)}
-                        className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm"
+                        type="text"
+                        readOnly
+                        value={
+                          formData.departDate
+                            ? new Date(formData.departDate).toLocaleDateString('en-US', {
+                                day: 'numeric',
+                                month: 'short',
+                              })
+                            : ''
+                        }
+                        placeholder="Select date"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent closing immediately
+                          setDepartCalendarOpen(true);
+                        }}
+                        className="w-full py-2.5 bg-transparent cursor-pointer focus:outline-none text-sm"
                         required
                       />
+                      {departCalendarOpen && (
+                        <div
+                          className="absolute z-30 mt-1 bg-white shadow-xl rounded-lg p-3 border border-gray-200"
+                          onClick={(e) => e.stopPropagation()} // Keep calendar open when interacting
+                        >
+                          <DayPicker
+                            mode="single"
+                            selected={
+                              formData.departDate ? new Date(formData.departDate) : undefined
+                            }
+                            onSelect={(date) => {
+                              if (date) {
+                                updateFormData('departDate', date.toISOString().split('T')[0]);
+                              }
+                              setDepartCalendarOpen(false);
+                            }}
+                            components={{ Day: CustomDay }}
+                            fromDate={new Date()}
+                          />
+                        </div>
+                      )}
                     </div>
-                  )}
-                  <div className={currentForm === 'one-way' ? 'md:col-span-4' : 'md:col-span-2'}>
+
+                    {/* Return */}
+                    {flightType === 'round-trip' && (
+                      <div className="flex-1 ml-2">
+                        <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                          Return
+                        </label>
+                        <input
+                          type="text"
+                          readOnly
+                          value={
+                            formData.returnDate
+                              ? new Date(formData.returnDate).toLocaleDateString('en-US', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                })
+                              : ''
+                          }
+                          placeholder="Select date"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setReturnCalendarOpen(true);
+                          }}
+                          className="w-full py-2.5 bg-transparent cursor-pointer focus:outline-none text-sm"
+                          required
+                        />
+                        {returnCalendarOpen && (
+                          <div
+                            className="absolute z-30 mt-1 w-full left-0 bg-white shadow-xl rounded-lg p-3 border border-gray-200  ml-2"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <DayPicker
+                              mode="single"
+                              selected={
+                                formData.returnDate ? new Date(formData.returnDate) : undefined
+                              }
+                              onSelect={(date) => {
+                                if (date) {
+                                  updateFormData('returnDate', date.toISOString().split('T')[0]);
+                                }
+                                setReturnCalendarOpen(false);
+                              }}
+                              components={{ Day: CustomDay }}
+                              fromDate={
+                                formData.departDate ? new Date(formData.departDate) : new Date()
+                              }
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {/* --- END: REPLACED DATE PICKER SECTION --- */}
+
+                  <div className="md:col-span-1 border border-border-blue-50 rounded-[10px] p-4">
+                    {/*  {flightType === 'one-way' ? 'md:col-span-4' : 'md:col-span-2'} */}
                     <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                      <Users className="inline w-4 h-4 mr-1" />
-                      Travelers
+                      {/* <Users className="inline w-4 h-4 mr-1" /> */}
+                      Travelers & class
                     </label>
                     <select
                       value={formData.travelers}
                       onChange={(e) => updateFormData('travelers', e.target.value)}
-                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm appearance-none bg-white"
+                      className="w-full py-2.5 border-none focus:border-blue-500 focus:outline-none text-sm appearance-none bg-white"
                     >
                       <option value="1">1 Adult</option>
                       <option value="2">2 Adults</option>
@@ -396,80 +483,8 @@ export const HeroSection: React.FC = () => {
                 </div>
               </>
             )}
-            {/*  {currentForm === 'hotel' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
-                <div className="md:col-span-4">
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                    <Hotel className="inline w-4 h-4 mr-1" />
-                    Destination
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.destination}
-                    onChange={(e) => updateFormData('destination', e.target.value)}
-                    placeholder="Enter city or hotel name"
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm font-medium"
-                    required
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                    <Calendar className="inline w-4 h-4 mr-1" />
-                    Check In
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.checkIn}
-                    onChange={(e) => updateFormData('checkIn', e.target.value)}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm"
-                    required
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                    <Calendar className="inline w-4 h-4 mr-1" />
-                    Check Out
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.checkOut}
-                    onChange={(e) => updateFormData('checkOut', e.target.value)}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm"
-                    required
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">Rooms</label>
-                  <select
-                    value={formData.rooms}
-                    onChange={(e) => updateFormData('rooms', e.target.value)}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm appearance-none bg-white"
-                  >
-                    <option value="1">1 Room</option>
-                    <option value="2">2 Rooms</option>
-                    <option value="3">3 Rooms</option>
-                    <option value="4">4+ Rooms</option>
-                  </select>
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                    <Users className="inline w-4 h-4 mr-1" />
-                    Guests
-                  </label>
-                  <select
-                    value={formData.guests}
-                    onChange={(e) => updateFormData('guests', e.target.value)}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm appearance-none bg-white"
-                  >
-                    <option value="1">1 Guest</option>
-                    <option value="2">2 Guests</option>
-                    <option value="3">3 Guests</option>
-                    <option value="4">4+ Guests</option>
-                  </select>
-                </div>
-              </div>
-            )} */}
-            {currentForm === 'packages' && (
+
+            {activeTab === 'holiday-packages' && (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
                 <div className="md:col-span-5">
                   <label className="block text-xs font-semibold text-gray-600 mb-1.5">
@@ -521,11 +536,12 @@ export const HeroSection: React.FC = () => {
                 </div>
               </div>
             )}
-            {currentForm === 'visa' && (
+
+            {activeTab === 'visa' && (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
                 <div className="md:col-span-5">
                   <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                    🌍 Country
+                    Country
                   </label>
                   <select
                     value={formData.visaCountry}
@@ -573,7 +589,8 @@ export const HeroSection: React.FC = () => {
                 </div>
               </div>
             )}
-            {currentForm === 'car-hire' && (
+
+            {/*  {activeTab === 'car-hire' && (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
                 <div className="md:col-span-3">
                   <label className="block text-xs font-semibold text-gray-600 mb-1.5">
@@ -629,20 +646,21 @@ export const HeroSection: React.FC = () => {
                 </div>
               </div>
             )}
+ */}
             {/* Search Button */}
             <button
               type="submit"
               className="absolute right-8 -bottom-6 w-max bg-primary-default hover:bg-secondary-dark text-white py-4 px-8 rounded-[12px] text-base font-medium flex items-center justify-center  transition shadow-lg"
             >
-              {currentForm === 'round-trip' || currentForm === 'one-way'
+              {activeTab === 'international-flight' || activeTab === 'domestic-flight'
                 ? 'Search Flight'
-                : currentForm === 'hotel'
-                ? 'Search Hotel'
-                : currentForm === 'packages'
+                : activeTab === 'holiday-packages'
                 ? 'Browse Packages'
-                : currentForm === 'visa'
+                : activeTab === 'visa'
                 ? 'Apply for Visa'
-                : 'Find Car'}
+                : activeTab === 'car-hire'
+                ? 'Find Car'
+                : 'Search'}
 
               <Search size={20} className="ml-4" />
             </button>
