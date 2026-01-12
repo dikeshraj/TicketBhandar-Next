@@ -1,17 +1,34 @@
 'use client';
 
-import React from 'react';
+import React, {useState} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Phone, MessageCircle, User } from 'lucide-react';
+import { Phone, MessageCircle, User, LogOut} from 'lucide-react';
 import { siteConfig } from '@/config/site';
 import { HeaderUser } from '@/types/user';
+import { useAuth } from '@/lib/authContext';
 
 type TopHeaderProps = {
   user?: HeaderUser | null;
 };
 
-export const TopHeader: React.FC<TopHeaderProps> = ({ user }) => {
+export const TopHeader: React.FC<TopHeaderProps> = () => {
+   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+   const { user, isAuthenticated, logout } = useAuth();
+  
+    const getDashboardLink = () => {
+      if (!user) return '/';
+      switch (user.role) {
+        case 'super-admin':
+          return '/admin/super-admin';
+        case 'admin':
+          return '/admin/dashboard';
+        case 'agent':
+          return '/admin/agent';
+        default:
+          return '/';
+      }
+    };
   return (
     <div className="bg-background-default border-b border-primary-dark">
       <div className="max-w-8xl mx-auto px-6">
@@ -61,8 +78,9 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ user }) => {
             )}
 
             {/*USER / AUTH SECTION   */}
-            {user ? (
-              <div className="flex items-center gap-3">
+            {isAuthenticated && user ? (
+              <Link  href={getDashboardLink()}
+                                className="flex items-center gap-3">
                 {user.avatar ? (
                   <Image
                     src={user.avatar}
@@ -71,21 +89,28 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ user }) => {
                     height={28}
                     className="rounded-full"
                   />
-                ) : <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
+                ) : <Link  href={getDashboardLink()} className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
                     <User size={16} />
-                  </div>}
+                  </Link>}
 
                 <div className="flex flex-col leading-tight">
                   <span className="font-medium text-gray-800">
                     {user.name}
                   </span>
-                  {user.balance && (
+                  <button
+                  onClick={logout}
+                  className="flex items-center gap-1 text-red-600 hover:text-red-700 transition font-semibold"
+                >
+                  <LogOut size={14} />
+                  Logout
+                </button>
+                  {/* {user.balance && (
                     <span className="text-xs text-gray-500">
                       {user.balance}
                     </span>
-                  )}
+                  )} */}
                 </div>
-              </div>
+              </Link>
             ) : (
               siteConfig.topHeader.showAuth && (
                 <>
@@ -94,7 +119,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ user }) => {
                   </Link>
 
                   <Link
-                    href="/signup"
+                    href="/register"
                     className="px-3 py-1 rounded-full border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white transition"
                   >
                     Sign Up
