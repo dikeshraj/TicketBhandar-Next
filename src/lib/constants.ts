@@ -33,6 +33,14 @@ export const DESTINATIONS: Destination[] = [
     /* description: 'Historic Hill Town', */
     price: 3500,
   },
+  {
+    id: '5',
+    name: 'Lalitpur',
+    image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&h=600&fit=crop',
+    label: '2D Lalitpur',
+    /* description: 'Birthplace of Buddha', */
+    price: 6000,
+  },
 ];
 
 export const SERVICES: Service[] = [
