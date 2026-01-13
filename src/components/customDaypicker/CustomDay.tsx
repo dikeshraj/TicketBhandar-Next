@@ -1,24 +1,32 @@
-// components/customDaypicker/CustomDay.tsx
-import { DayProps } from 'react-day-picker';
+
+import { DayButtonProps, UI, useDayPicker } from 'react-day-picker';
 import { format, isValid } from 'date-fns';
 import { flightPrices } from '@/components/customDaypicker/flightPrices';
 
-export function CustomDay({ date, isOutside }: DayProps) {
-  // Only hide off-month days
-  if (isOutside) {
-    return null;
-  }
+function WrappedDayButton(props: DayButtonProps) {
+  const { components, classNames } = useDayPicker();
+  const date = props.day.date;
 
-  // Safely render even if price is missing
+  // Safely look up price
   const dateKey = isValid(date) ? format(date, 'yyyy-MM-dd') : '';
   const price = dateKey ? flightPrices[dateKey] : undefined;
 
+  // react-day-picker's built-in DayButton component for core behavior/styling
   return (
-    <div className="flex flex-col items-center justify-center h-12 gap-1">
+    <components.DayButton
+      {...props}
+      className={`${classNames[UI.DayButton]} flex flex-col items-center justify-center h-12 w-full gap-1`}
+    >
       <span className="text-sm font-medium">{date.getDate()}</span>
+      
+      {/*custom price component below the date */}
       {price !== undefined && (
-        <span className="text-[10px] font-semibold text-green-600">{price}</span>
+        <span className="text-[10px] font-semibold text-green-600">
+          {price}
+        </span>
       )}
-    </div>
+    </components.DayButton>
   );
 }
+
+export default WrappedDayButton;

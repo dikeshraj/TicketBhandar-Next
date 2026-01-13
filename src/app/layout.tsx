@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+// import { Inter } from 'next/font/google';
 import { Poppins } from 'next/font/google';
 import './styles/globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { HeaderUser } from '@/types/user';
+// import { HeaderUser } from '@/types/user';
 import { AuthProvider } from '@/lib/authContext';
 
 // const inter = Inter({ subsets: ['latin'] });
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   // 🔐 Later this will come from auth (NextAuth / API)
-  const user: HeaderUser | null = null;
+  /* const user: HeaderUser | null = null; */
 
   return (
     <html lang="en">

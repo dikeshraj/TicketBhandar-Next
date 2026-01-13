@@ -1,15 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, MapPin, Calendar, Users, Hotel, Package } from 'lucide-react';
+import { Search, Calendar, Package } from 'lucide-react';
 import Image from 'next/image';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { AutocompleteInput } from '@/components/ui/AutocompleteInput';
 import 'react-day-picker/dist/style.css';
-import { CustomDay } from '@/components/customDaypicker/CustomDay';
+// import WrappedDayButton from '@/components/customDaypicker/CustomDay';
 import { DayPicker } from 'react-day-picker';
 
 // Tab types for top-level navigation
@@ -23,9 +23,8 @@ type TabType =
   | 'car-hire'
   | 'hotel';
 
-// Flight sub-type (for internal use in flight forms)
+// Flight sub-type
 type FlightType = 'one-way' | 'round-trip' | 'multi-city';
-
 type PassengerType = 'regular' | 'student';
 
 const cityOptions = [
@@ -40,39 +39,31 @@ const cityOptions = [
 ];
 
 interface FormData {
-  // Flight fields
-  // from/to separated
-  /* from: string;
-  to: string; */
   departDate: string;
   returnDate: string;
   travelers: string;
-
-  // Hotel fields
+  adults: number; // Number of adults (over 12)
+  children: number; // Number of children (2–11)
+  infants: number; // Number of infants (under 3)
+  nationality: string; // Selected nationality
+  travelClass: string;
   destination: string;
   checkIn: string;
   checkOut: string;
   rooms: string;
   guests: string;
-
-  // Package fields
   packageDestination: string;
   packageDate: string;
   packageDuration: string;
-
-  // Visa fields
   visaCountry: string;
   visaType: string;
   travelDate: string;
-
-  // Car hire fields
   pickupLocation: string;
   dropoffLocation: string;
   pickupDate: string;
   dropoffDate: string;
 }
 
-// Define tab config with icon and label
 interface TabConfig {
   id: TabType;
   label: string;
@@ -82,19 +73,26 @@ interface TabConfig {
 
 export const HeroSection: React.FC = () => {
   const router = useRouter();
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [activeTab, setActiveTab] = useState<TabType>('international-flight');
   const [flightType, setFlightType] = useState<FlightType>('round-trip');
   const [passengerType, setPassengerType] = useState<PassengerType>('regular');
   const [departCalendarOpen, setDepartCalendarOpen] = useState(false);
   const [returnCalendarOpen, setReturnCalendarOpen] = useState(false);
+  // Only track selected dates. no formData sync during interaction
+  const [selectedDepartDate, setSelectedDepartDate] = useState<Date | undefined>();
+  const [selectedReturnDate, setSelectedReturnDate] = useState<Date | undefined>();
+  const dateWrapperRef = useRef<HTMLDivElement | null>(null);
+  const [showTravelers, setShowTravelers] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
-    /* from: 'Kathmandu',
-    to: 'London', */
     departDate: '',
     returnDate: '',
     travelers: '1',
+    adults: 1,
+    children: 0,
+    infants: 0,
+    nationality: '',
+    travelClass: '',
     destination: '',
     checkIn: '',
     checkOut: '',
@@ -120,9 +118,6 @@ export const HeroSection: React.FC = () => {
       case 'domestic-flight':
         router.push('/flights/search');
         break;
-      /*  case 'hotel':
-        router.push('/hotels/search');
-        break; */
       case 'holiday-packages':
         router.push('/packages');
         break;
@@ -135,9 +130,6 @@ export const HeroSection: React.FC = () => {
       case 'visa':
         router.push('/visa');
         break;
-      /* case 'car-hire':
-        router.push('/car-hire');
-        break; */
     }
   };
 
@@ -145,10 +137,25 @@ export const HeroSection: React.FC = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  useEffect(() => {
+  const handleDepartSelect = (date: Date | undefined) => {
+    setSelectedDepartDate(date);
+    setDepartCalendarOpen(false);
+    /* if (flightType !== 'one-way') {
+      setTimeout(() => setReturnCalendarOpen(true), 50);
+    } */
+    if (flightType !== 'one-way') {
+      setReturnCalendarOpen(true);
+    }
+  };
+
+  const handleReturnSelect = (date: Date | undefined) => {
+    setSelectedReturnDate(date);
+    setReturnCalendarOpen(false);
+  };
+
+  /* useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      // Only close if click is outside calendar AND input
       if (!target.closest('.rdp') && !target.closest('[placeholder*="date"]')) {
         setDepartCalendarOpen(false);
         setReturnCalendarOpen(false);
@@ -157,14 +164,23 @@ export const HeroSection: React.FC = () => {
 
     if (departCalendarOpen || returnCalendarOpen) {
       document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
     }
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
+  }, [departCalendarOpen, returnCalendarOpen]); */
+  useEffect(() => {
+    const handlePointerDown = (e: PointerEvent) => {
+      if (dateWrapperRef.current && !dateWrapperRef.current.contains(e.target as Node)) {
+        setDepartCalendarOpen(false);
+        setReturnCalendarOpen(false);
+      }
     };
+
+    if (departCalendarOpen || returnCalendarOpen) {
+      document.addEventListener('pointerdown', handlePointerDown);
+      return () => document.removeEventListener('pointerdown', handlePointerDown);
+    }
   }, [departCalendarOpen, returnCalendarOpen]);
 
-  // Top-level tabs (visible in UI)
   const tabs: TabConfig[] = [
     {
       id: 'international-flight',
@@ -179,12 +195,14 @@ export const HeroSection: React.FC = () => {
       isFlight: true,
     },
     { id: 'insurance', label: 'Insurance', icon: '/images/icons/insurance.png' },
-    /*  { id: 'hotel', label: 'Hotel', icon: '🏨' }, */
     { id: 'holiday-packages', label: 'Holiday Packages', icon: '/images/icons/holiday.png' },
     { id: 'heli', label: 'Heli', icon: '/images/icons/heli.png' },
     { id: 'visa', label: 'Visa', icon: '/images/icons/visa.png' },
-    /*   { id: 'car-hire', label: 'Car Hire', icon: '🚗' }, */
   ];
+
+  const formatDate = (date: Date | undefined) => {
+    return date ? date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : '';
+  };
 
   return (
     <div
@@ -202,13 +220,12 @@ export const HeroSection: React.FC = () => {
               <br />
               find.
             </p>
-            <div className="block mt-[-2rem] text-secondary-default text-3xl traxking-wide font-semibold">
+            <div className="block mt-[-2rem] text-secondary-default text-3xl tracking-wide font-semibold">
               Ticket
             </div>
           </div>
         </div>
 
-        {/* booking tab/form starts */}
         <div className="absolute h-full w-full max-w-[1280px] px-6 left-1/2 -translate-x-1/2 top-[60%]">
           {/* Tabs Row */}
           <div className="bg-white shadow-2xl rounded-[16px] p-6 absolute top-[-13%] left-1/2 -translate-x-1/2 z-10">
@@ -241,7 +258,7 @@ export const HeroSection: React.FC = () => {
             onSubmit={handleSearch}
             className="relative bg-white rounded-2xl shadow-2xl px-8 pb-4 pt-20"
           >
-            {/* Flight Type Toggle — only for flight tabs */}
+            {/* Flight Type Toggle */}
             {tabs.find((t) => t.id === activeTab)?.isFlight && (
               <FormGroup row className="mb-4 gap-3">
                 {(['one-way', 'round-trip', 'multi-city'] as FlightType[]).map((type) => {
@@ -252,75 +269,48 @@ export const HeroSection: React.FC = () => {
                       ? 'Round Trip'
                       : 'Multi City';
 
-                  const isChecked = flightType === type;
-
                   return (
                     <FormControlLabel
                       key={type}
                       className="flex items-center gap-2"
                       control={
                         <Checkbox
-                          checked={isChecked}
+                          checked={flightType === type}
                           onChange={() => setFlightType(type)}
                           sx={{
                             padding: 0,
-                            color: '#D1D5DB', // gray-300
-                            '&.Mui-checked': {
-                              color: '#EF4444', // red-500 (match screenshot)
-                            },
-                            '& .MuiSvgIcon-root': {
-                              fontSize: 20,
-                              borderRadius: '50%', // 👈 rounded checkbox
-                            },
+                            color: '#D1D5DB',
+                            '&.Mui-checked': { color: '#EF4444' },
+                            '& .MuiSvgIcon-root': { fontSize: 20, borderRadius: '50%' },
                           }}
                         />
                       }
-                      label={<span className="text-sm text-text-default ml-0 mr-0">{label}</span>}
+                      label={<span className="text-sm text-text-default">{label}</span>}
                     />
                   );
                 })}
               </FormGroup>
             )}
 
-            {/* Render forms directly based on activeTab */}
+            {/* FLIGHT FORM */}
             {(activeTab === 'international-flight' || activeTab === 'domestic-flight') && (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                   <div className="md:col-span-1 border border-border-blue-50 rounded-[10px] p-4">
                     <label className="block text-xs font-medium text-text-default mb-1.5">
-                      {/* <MapPin className="inline w-4 h-4 mr-1" /> */}
                       From
                     </label>
                     <AutocompleteInput field="from" options={cityOptions} placeholder="Kathmandu" />
-
-                    {/* <input
-                      type="text"
-                      value={formData.from}
-                      onChange={(e) => updateFormData('from', e.target.value)}
-                      placeholder="Kathmandu"
-                      className="w-full border border-none focus:border-blue-500 focus:outline-none text-sm font-medium"
-                      required
-                    /> */}
                   </div>
                   <div className="md:col-span-1 border border-border-blue-50 rounded-[10px] p-4">
-                    <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                      {/* <MapPin className="inline w-4 h-4 mr-1" /> */}
-                      To
-                    </label>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1.5">To</label>
                     <AutocompleteInput field="to" options={cityOptions} placeholder="London" />
-                    {/* <input
-                      type="text"
-                      value={formData.to}
-                      onChange={(e) => updateFormData('to', e.target.value)}
-                      placeholder="London"
-                      className="w-full border-none rounded-lg focus:border-blue-500 focus:outline-none text-sm font-medium"
-                      required
-                    /> */}
                   </div>
-                  {/* --- START: REPLACED DATE PICKER SECTION --- */}
-                  {/* REPLACED DATE PICKER SECTION */}
-                  <div className="md:col-span-1 flex flex-row flex-nowrap border border-border-blue-50 rounded-[10px] p-4 relative">
-                    {/* Departure */}
+
+                  <div
+                    ref={dateWrapperRef}
+                    className="md:col-span-1 flex flex-row flex-nowrap border border-border-blue-50 rounded-[10px] p-4 relative"
+                  >
                     <div className="flex-1 mr-2">
                       <label className="block text-xs font-semibold text-gray-600 mb-1.5">
                         Depart
@@ -328,46 +318,27 @@ export const HeroSection: React.FC = () => {
                       <input
                         type="text"
                         readOnly
-                        value={
-                          formData.departDate
-                            ? new Date(formData.departDate).toLocaleDateString('en-US', {
-                                day: 'numeric',
-                                month: 'short',
-                              })
-                            : ''
-                        }
+                        value={formatDate(selectedDepartDate)}
                         placeholder="Select date"
                         onClick={(e) => {
-                          e.stopPropagation(); // Prevent closing immediately
+                          e.stopPropagation();
                           setDepartCalendarOpen(true);
                         }}
                         className="w-full py-2.5 bg-transparent cursor-pointer focus:outline-none text-sm"
                         required
                       />
                       {departCalendarOpen && (
-                        <div
-                          className="absolute z-30 mt-1 bg-white shadow-xl rounded-lg p-3 border border-gray-200"
-                          onClick={(e) => e.stopPropagation()} // Keep calendar open when interacting
-                        >
+                        <div className="absolute z-30 mt-1 bg-white shadow-xl rounded-lg p-3 border border-gray-200">
                           <DayPicker
                             mode="single"
-                            selected={
-                              formData.departDate ? new Date(formData.departDate) : undefined
-                            }
-                            onSelect={(date) => {
-                              if (date) {
-                                updateFormData('departDate', date.toISOString().split('T')[0]);
-                              }
-                              setDepartCalendarOpen(false);
-                            }}
-                            components={{ Day: CustomDay }}
-                            fromDate={new Date()}
+                            selected={selectedDepartDate}
+                            onSelect={handleDepartSelect}
+                            /* components={{ DayButton: WrappedDayButton }} */
                           />
                         </div>
                       )}
                     </div>
 
-                    {/* Return */}
                     {flightType === 'round-trip' && (
                       <div className="flex-1 ml-2">
                         <label className="block text-xs font-semibold text-gray-600 mb-1.5">
@@ -376,14 +347,7 @@ export const HeroSection: React.FC = () => {
                         <input
                           type="text"
                           readOnly
-                          value={
-                            formData.returnDate
-                              ? new Date(formData.returnDate).toLocaleDateString('en-US', {
-                                  day: 'numeric',
-                                  month: 'short',
-                                })
-                              : ''
-                          }
+                          value={formatDate(selectedReturnDate)}
                           placeholder="Select date"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -393,49 +357,247 @@ export const HeroSection: React.FC = () => {
                           required
                         />
                         {returnCalendarOpen && (
-                          <div
-                            className="absolute z-30 mt-1 w-full left-0 bg-white shadow-xl rounded-lg p-3 border border-gray-200  ml-2"
-                            onClick={(e) => e.stopPropagation()}
-                          >
+                          <div className="absolute z-30 mt-1 bg-white shadow-xl rounded-lg p-3 border border-gray-200 ml-2">
                             <DayPicker
                               mode="single"
-                              selected={
-                                formData.returnDate ? new Date(formData.returnDate) : undefined
-                              }
-                              onSelect={(date) => {
-                                if (date) {
-                                  updateFormData('returnDate', date.toISOString().split('T')[0]);
-                                }
-                                setReturnCalendarOpen(false);
-                              }}
-                              components={{ Day: CustomDay }}
-                              fromDate={
-                                formData.departDate ? new Date(formData.departDate) : new Date()
-                              }
+                              selected={selectedReturnDate}
+                              onSelect={handleReturnSelect}
+                              /* components={{ DayButton: WrappedDayButton }} */
                             />
                           </div>
                         )}
                       </div>
                     )}
                   </div>
-                  {/* --- END: REPLACED DATE PICKER SECTION --- */}
 
-                  <div className="md:col-span-1 border border-border-blue-50 rounded-[10px] p-4">
-                    {/*  {flightType === 'one-way' ? 'md:col-span-4' : 'md:col-span-2'} */}
+                  {/* <div className="md:col-span-1 border border-border-blue-50 rounded-[10px] p-4">
                     <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                      {/* <Users className="inline w-4 h-4 mr-1" /> */}
                       Travelers & class
                     </label>
-                    <select
-                      value={formData.travelers}
-                      onChange={(e) => updateFormData('travelers', e.target.value)}
-                      className="w-full py-2.5 border-none focus:border-blue-500 focus:outline-none text-sm appearance-none bg-white"
+                    <div className="flex flex-row flex-nowrap justify-start items-start">
+                      <select
+                        value={formData.travelers}
+                        onChange={(e) => updateFormData('travelers', e.target.value)}
+                        className="w-full py-2.5 border-none focus:border-blue-500 focus:outline-none text-sm appearance-none bg-white"
+                      >
+                        <option value="1">1 Adult</option>
+                        <option value="2">2 Adults</option>
+                        <option value="3">3 Adults</option>
+                        <option value="4">4+ Adults</option>
+                      </select>
+                      <select
+                        value={formData.travelers}
+                        onChange={(e) => updateFormData('travelers', e.target.value)}
+                        className="w-full py-2.5 border-none focus:border-blue-500 focus:outline-none text-sm appearance-none bg-white"
+                      >
+                        <option value="1">1 Adult</option>
+                        <option value="2">2 Adults</option>
+                        <option value="3">3 Adults</option>
+                        <option value="4">4+ Adults</option>
+                      </select>
+                    </div>
+                  </div> */}
+                  <div className="md:col-span-1 border border-border-blue-50 rounded-[10px] p-4 relative">
+                    <label className="block text-xs font-semibold text-gray-600 mb-2">
+                      Travelers & Class
+                    </label>
+
+                    {/* Dropdown trigger */}
+                    <button
+                      type="button"
+                      onClick={() => setShowTravelers(!showTravelers)}
+                      className="w-full flex justify-between items-center py-2.5 px-3 border-none bg-white text-sm focus:outline-none"
                     >
-                      <option value="1">1 Adult</option>
-                      <option value="2">2 Adults</option>
-                      <option value="3">3 Adults</option>
-                      <option value="4">4+ Adults</option>
-                    </select>
+                      <span>
+                        {`${
+                          (formData.adults || 1) +
+                          (formData.children || 0) +
+                          (formData.infants || 0)
+                        } Traveler${
+                          (formData.adults || 1) +
+                            (formData.children || 0) +
+                            (formData.infants || 0) >
+                          1
+                            ? 's'
+                            : ''
+                        }`}
+                      </span>
+                      {/* Nationality short */}
+                      {formData.nationality && (
+                        <span className="px-2 py-0.5 bg-gray-100 rounded text-xs uppercase">
+                          {formData.nationality}
+                        </span>
+                      )}
+
+                      {/* Class */}
+                      {formData.travelClass && (
+                        <span className="px-2 py-0.5 bg-gray-100 rounded text-xs capitalize">
+                          {formData.travelClass}
+                        </span>
+                      )}
+
+                      <svg
+                        className={`w-4 h-4 ml-2 transition-transform ${
+                          showTravelers ? 'rotate-180' : ''
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+
+                    {/* Dropdown panel */}
+                    {showTravelers && (
+                      <div className="absolute z-50 mt-2 w-full bg-white shadow-lg rounded-lg border border-gray-200 p-4">
+                        {/* Adults */}
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <div className="text-sm font-medium text-gray-700">Adult</div>
+                            <div className="text-xs text-gray-400">Over 12</div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              className="w-6 h-6 flex items-center justify-center border border-gray-300 rounded"
+                              onClick={() =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  adults: Math.max(1, (prev.adults || 1) - 1),
+                                }))
+                              }
+                            >
+                              -
+                            </button>
+                            <span className="w-6 text-center">{formData.adults || 1}</span>
+                            <button
+                              type="button"
+                              className="w-6 h-6 flex items-center justify-center border border-gray-300 rounded"
+                              onClick={() =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  adults: (prev.adults || 1) + 1,
+                                }))
+                              }
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Children */}
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <div className="text-sm font-medium text-gray-700">Children</div>
+                            <div className="text-xs text-gray-400">2–11</div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              className="w-6 h-6 flex items-center justify-center border border-gray-300 rounded"
+                              onClick={() =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  children: Math.max(0, (prev.children || 0) - 1),
+                                }))
+                              }
+                            >
+                              -
+                            </button>
+                            <span className="w-6 text-center">{formData.children || 0}</span>
+                            <button
+                              type="button"
+                              className="w-6 h-6 flex items-center justify-center border border-gray-300 rounded"
+                              onClick={() =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  children: (prev.children || 0) + 1,
+                                }))
+                              }
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Infants */}
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <div className="text-sm font-medium text-gray-700">Infants</div>
+                            <div className="text-xs text-gray-400">Under 3</div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              className="w-6 h-6 flex items-center justify-center border border-gray-300 rounded"
+                              onClick={() =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  infants: Math.max(0, (prev.infants || 0) - 1),
+                                }))
+                              }
+                            >
+                              -
+                            </button>
+                            <span className="w-6 text-center">{formData.infants || 0}</span>
+                            <button
+                              type="button"
+                              className="w-6 h-6 flex items-center justify-center border border-gray-300 rounded"
+                              onClick={() =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  infants: (prev.infants || 0) + 1,
+                                }))
+                              }
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Nationality */}
+                        <div className="mb-3">
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Nationality
+                          </label>
+                          <select
+                            value={formData.nationality || ''}
+                            onChange={(e) => updateFormData('nationality', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 bg-white"
+                          >
+                            <option value="">Select Nationality</option>
+                            <option value="np">Nepal (NP)</option>
+                            <option value="us">United States (US)</option>
+                            <option value="uk">United Kingdom (UK)</option>
+                            <option value="in">India (IN)</option>
+                            {/* Add more as needed */}
+                          </select>
+                        </div>
+
+                        {/* Class */}
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Select Class
+                          </label>
+                          <select
+                            value={formData.travelClass || ''}
+                            onChange={(e) => updateFormData('travelClass', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 bg-white"
+                          >
+                            <option value="">Any Class</option>
+                            <option value="economy">Economy</option>
+                            <option value="business">Business</option>
+                            <option value="first">First</option>
+                          </select>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -484,6 +646,7 @@ export const HeroSection: React.FC = () => {
               </>
             )}
 
+            {/* HOLIDAY PACKAGES */}
             {activeTab === 'holiday-packages' && (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
                 <div className="md:col-span-5">
@@ -537,6 +700,7 @@ export const HeroSection: React.FC = () => {
               </div>
             )}
 
+            {/* VISA FORM */}
             {activeTab === 'visa' && (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
                 <div className="md:col-span-5">
@@ -590,67 +754,10 @@ export const HeroSection: React.FC = () => {
               </div>
             )}
 
-            {/*  {activeTab === 'car-hire' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
-                <div className="md:col-span-3">
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                    🚗 Pickup Location
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pickupLocation}
-                    onChange={(e) => updateFormData('pickupLocation', e.target.value)}
-                    placeholder="Enter location"
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm font-medium"
-                    required
-                  />
-                </div>
-                <div className="md:col-span-3">
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                    📍 Dropoff Location
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.dropoffLocation}
-                    onChange={(e) => updateFormData('dropoffLocation', e.target.value)}
-                    placeholder="Enter location"
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm font-medium"
-                    required
-                  />
-                </div>
-                <div className="md:col-span-3">
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                    <Calendar className="inline w-4 h-4 mr-1" />
-                    Pickup Date
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.pickupDate}
-                    onChange={(e) => updateFormData('pickupDate', e.target.value)}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm"
-                    required
-                  />
-                </div>
-                <div className="md:col-span-3">
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                    <Calendar className="inline w-4 h-4 mr-1" />
-                    Dropoff Date
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.dropoffDate}
-                    onChange={(e) => updateFormData('dropoffDate', e.target.value)}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm"
-                    required
-                  />
-                </div>
-              </div>
-            )}
- */}
-            {/* Search Button */}
+            {/* SEARCH BUTTON */}
             <button
               type="submit"
-              className="absolute right-8 -bottom-6 w-max bg-primary-default hover:bg-secondary-dark text-white py-4 px-8 rounded-[12px] text-base font-medium flex items-center justify-center  transition shadow-lg"
+              className="absolute right-8 -bottom-6 w-max bg-primary-default hover:bg-secondary-dark text-white py-4 px-8 rounded-[12px] text-base font-medium flex items-center justify-center transition shadow-lg"
             >
               {activeTab === 'international-flight' || activeTab === 'domestic-flight'
                 ? 'Search Flight'
@@ -658,15 +765,11 @@ export const HeroSection: React.FC = () => {
                 ? 'Browse Packages'
                 : activeTab === 'visa'
                 ? 'Apply for Visa'
-                : activeTab === 'car-hire'
-                ? 'Find Car'
                 : 'Search'}
-
               <Search size={20} className="ml-4" />
             </button>
           </form>
         </div>
-        {/* booking tab/form ends */}
       </div>
     </div>
   );
