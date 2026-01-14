@@ -23,7 +23,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on clicking outside
+  // Closes dropdown on clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -36,7 +36,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [options]);
 
-  // Filter options whenever filterText changes
+  // Filters options whenever filterText changes
   useEffect(() => {
     if (filterText) {
       setFilteredOptions(
@@ -47,7 +47,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     }
   }, [filterText, options]);
 
-  // Open dropdown on focus
+  // Opens dropdown on focus
   const handleFocus = () => {
     setShowDropdown(true);
     setFilteredOptions(options); // show all options initially
@@ -69,11 +69,11 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         readOnly 
         onFocus={handleFocus}
         placeholder={placeholder}
-        className="w-full border-none focus:outline-none focus:ring-0 text-sm font-medium "
+        className="w-full border-none focus:outline-none focus:ring-0 text-sm font-medium cursor-pointer"
       />
 
       {showDropdown && filteredOptions.length > 0 && (
-        <ul className="absolute z-50 w-full mt-1 px-4 py-3 max-h-max overflow-auto bg-white rounded-[10px] shadow-lg">
+        <ul className="absolute z-50 w-full min-w-[260px] -left-3 mt-10 px-4 py-3 max-h-max overflow-auto bg-white rounded-[8px] shadow-custom">
           {/* Filter input inside dropdown */}
           <input
             type="text"

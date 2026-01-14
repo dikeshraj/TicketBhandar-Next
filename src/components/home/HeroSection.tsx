@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Calendar, Package } from 'lucide-react';
+import { Search, Calendar, CalendarDays, Package } from 'lucide-react';
 import Image from 'next/image';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+// import FormGroup from '@mui/material/FormGroup';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import Checkbox from '@mui/material/Checkbox';
+import RoundCheckbox from '@/components/ui/RoundCheckbox';
 import { AutocompleteInput } from '@/components/ui/AutocompleteInput';
 import 'react-day-picker/dist/style.css';
 // import WrappedDayButton from '@/components/customDaypicker/CustomDay';
@@ -87,12 +88,12 @@ export const HeroSection: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     departDate: '',
     returnDate: '',
-    travelers: '1',
+    travelers: '01',
     adults: 1,
     children: 0,
     infants: 0,
-    nationality: '',
-    travelClass: '',
+    nationality: 'NP',
+    travelClass: 'Economy',
     destination: '',
     checkIn: '',
     checkOut: '',
@@ -206,29 +207,29 @@ export const HeroSection: React.FC = () => {
 
   return (
     <div
-      className="relative bg-cover bg-center bg-no-repeat min-h-[85vh] pb-48"
+      className="relative bg-cover bg-bottom bg-no-repeat h-[85vh] max-h-[90vh] pb-44"
       style={{ backgroundImage: "url('/images/hero-background.png')" }}
     >
       <div className="container">
-        <div className="z-10 mx-auto pt-8 pb-4">
+        <div className="z-10 mx-auto pt-10 pb-4 px-10">
           <div className="mb-4">
             <h1 className="text-3xl md:text-4xl font-medium text-black leading-relaxed">
-              From Nepal to the World – <span className="text-secondary-dark">Easy</span>
+              From Nepal to the World – <span className="text-secondary-dark">Easy Ticket</span>
             </h1>
             <p className="text-lg text-black">
               Book cheap flights other sites simply can't
               <br />
               find.
             </p>
-            <div className="block mt-[-2rem] text-secondary-default text-3xl tracking-wide font-semibold">
+            {/* <div className="block mt-[-2rem] text-secondary-default text-3xl tracking-wide font-semibold">
               Ticket
-            </div>
+            </div> */}
           </div>
         </div>
 
-        <div className="absolute h-full w-full max-w-[1280px] px-6 left-1/2 -translate-x-1/2 top-[60%]">
+        <div className="absolute h-full w-full max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-10 left-1/2 -translate-x-1/2 top-[60%]">
           {/* Tabs Row */}
-          <div className="bg-white shadow-2xl rounded-[16px] p-6 absolute top-[-13%] left-1/2 -translate-x-1/2 z-10">
+          <div className="bg-white shadow-custom rounded-[16px] p-6 absolute top-[-11%] left-1/2 -translate-x-1/2 z-10">
             <div className="flex flex-row gap-2 items-center justify-between w-full h-full">
               {tabs.map((tab) => (
                 <button
@@ -256,11 +257,11 @@ export const HeroSection: React.FC = () => {
           {/* Form Wrapper */}
           <form
             onSubmit={handleSearch}
-            className="relative bg-white rounded-2xl shadow-2xl px-8 pb-4 pt-20"
+            className="relative bg-white rounded-[20px] shadow-custom px-8 pb-4 pt-20"
           >
             {/* Flight Type Toggle */}
             {tabs.find((t) => t.id === activeTab)?.isFlight && (
-              <FormGroup row className="mb-4 gap-3">
+              <div className="flex flex-row items-center gap-3 mt-4 mb-6 lg:ml-10">
                 {(['one-way', 'round-trip', 'multi-city'] as FlightType[]).map((type) => {
                   const label =
                     type === 'one-way'
@@ -270,26 +271,15 @@ export const HeroSection: React.FC = () => {
                       : 'Multi City';
 
                   return (
-                    <FormControlLabel
+                    <RoundCheckbox
                       key={type}
-                      className="flex items-center gap-2"
-                      control={
-                        <Checkbox
-                          checked={flightType === type}
-                          onChange={() => setFlightType(type)}
-                          sx={{
-                            padding: 0,
-                            color: '#D1D5DB',
-                            '&.Mui-checked': { color: '#EF4444' },
-                            '& .MuiSvgIcon-root': { fontSize: 20, borderRadius: '50%' },
-                          }}
-                        />
-                      }
-                      label={<span className="text-sm text-text-default">{label}</span>}
+                      checked={flightType === type}
+                      onChange={() => setFlightType(type)}
+                      label={label}
                     />
                   );
                 })}
-              </FormGroup>
+              </div>
             )}
 
             {/* FLIGHT FORM */}
@@ -302,6 +292,17 @@ export const HeroSection: React.FC = () => {
                     </label>
                     <AutocompleteInput field="from" options={cityOptions} placeholder="Kathmandu" />
                   </div>
+                  {/* direction icon */}
+                  <div className="w-10 h-10 bg-white top-[50%] left-[24%] border border-border-blue-25 rounded-full flex items-centet justify-center text-center absolute">
+                    <Image
+                      alt="direction"
+                      src="/images/icons/square-direction.png"
+                      width={18}
+                      height={18}
+                      className="object-contain aspect-square text-center"
+                    />
+                  </div>
+                  {/* direction icon ends */}
                   <div className="md:col-span-1 border border-border-blue-50 rounded-[10px] p-4">
                     <label className="block text-xs font-semibold text-gray-600 mb-1.5">To</label>
                     <AutocompleteInput field="to" options={cityOptions} placeholder="London" />
@@ -309,24 +310,29 @@ export const HeroSection: React.FC = () => {
 
                   <div
                     ref={dateWrapperRef}
-                    className="md:col-span-1 flex flex-row flex-nowrap border border-border-blue-50 rounded-[10px] p-4 relative"
+                    className="md:col-span-1 flex flex-row flex-nowrap border border-border-blue-50 rounded-[10px] px-3 py-4 relative"
                   >
-                    <div className="flex-1 mr-2">
-                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                        Depart
+                    <div className="flex-1 pr-4 relative ">
+                      <label className="block text-xs font-medium text-text-grey mb-1.5">
+                        DEPARTURE
                       </label>
                       <input
                         type="text"
                         readOnly
                         value={formatDate(selectedDepartDate)}
-                        placeholder="Select date"
+                        placeholder="31 Aug"
                         onClick={(e) => {
                           e.stopPropagation();
                           setDepartCalendarOpen(true);
                         }}
-                        className="w-full py-2.5 bg-transparent cursor-pointer focus:outline-none text-sm"
+                        className="w-full bg-transparent cursor-pointer focus:outline-none text-sm font-semibold placeholder-black"
                         required
                       />
+                      <CalendarDays
+                        size={16}
+                        className="absolute top-6 right-4 stroke-secondary-default"
+                      />
+                      {/*  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-calendar-days-icon lucide-calendar-days"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg> */}
                       {departCalendarOpen && (
                         <div className="absolute z-30 mt-1 bg-white shadow-xl rounded-lg p-3 border border-gray-200">
                           <DayPicker
@@ -339,22 +345,28 @@ export const HeroSection: React.FC = () => {
                       )}
                     </div>
 
+                    {/*  <div className="absolute"></div> */}
+
                     {flightType === 'round-trip' && (
-                      <div className="flex-1 ml-2">
-                        <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                          Return
+                      <div className="flex-1 pl-4 border-l border-dashed border-secondary-default relative">
+                        <label className="block text-xs font-medium text-text-grey mb-1.5">
+                          RETURN
                         </label>
                         <input
                           type="text"
                           readOnly
                           value={formatDate(selectedReturnDate)}
-                          placeholder="Select date"
+                          placeholder="31 Aug"
                           onClick={(e) => {
                             e.stopPropagation();
                             setReturnCalendarOpen(true);
                           }}
-                          className="w-full py-2.5 bg-transparent cursor-pointer focus:outline-none text-sm"
+                          className="w-full bg-transparent cursor-pointer focus:outline-none text-sm font-semibold placeholder-black"
                           required
+                        />
+                        <CalendarDays
+                          size={16}
+                          className="absolute right-4 top-6 stroke-secondary-default"
                         />
                         {returnCalendarOpen && (
                           <div className="absolute z-30 mt-1 bg-white shadow-xl rounded-lg p-3 border border-gray-200 ml-2">
@@ -398,45 +410,63 @@ export const HeroSection: React.FC = () => {
                     </div>
                   </div> */}
                   <div className="md:col-span-1 border border-border-blue-50 rounded-[10px] p-4 relative">
-                    <label className="block text-xs font-semibold text-gray-600 mb-2">
-                      Travelers & Class
+                    <label className="block text-xs font-medium text-text-grey mb-1.5 uppercase">
+                      TRAVELLERS & CLASS
                     </label>
 
                     {/* Dropdown trigger */}
                     <button
                       type="button"
                       onClick={() => setShowTravelers(!showTravelers)}
-                      className="w-full flex justify-between items-center py-2.5 px-3 border-none bg-white text-sm focus:outline-none"
+                      className="w-full flex items-center justify-between gap-4 border-none bg-white text-sm focus:outline-none"
                     >
-                      <span>
-                        {`${
-                          (formData.adults || 1) +
-                          (formData.children || 0) +
-                          (formData.infants || 0)
-                        } Traveler${
-                          (formData.adults || 1) +
+                      <div className="block text-base">
+                        <span className="font-semibold pr-1">
+                          {(formData.adults || 1) +
                             (formData.children || 0) +
-                            (formData.infants || 0) >
-                          1
-                            ? 's'
-                            : ''
-                        }`}
-                      </span>
-                      {/* Nationality short */}
-                      {formData.nationality && (
-                        <span className="px-2 py-0.5 bg-gray-100 rounded text-xs uppercase">
-                          {formData.nationality}
+                            (formData.infants || 0)}
                         </span>
-                      )}
+                        <span className="font-normal text-sm text-text-grey">
+                          {' Traveler' +
+                            ((formData.adults || 1) +
+                              (formData.children || 0) +
+                              (formData.infants || 0) >1
+                              ? 's'
+                              : '')}
+                        </span>
+                      </div>
+                      
+                      {/* Nationality short */}
+                      {/*  {formData.nationality && ( */}
+                      <div className=" flex gap-2">
+                        <span className="text-sm uppercase font-semibold">({formData.nationality})</span>
+                        <Image
+                          src="/images/icons/flagOfnepal.svg"
+                          width={14}
+                          height={14}
+                          alt="Nationality"
+                          className="object-contain"
+                        />
+                      </div>
+
+                      {/*  )} */}
 
                       {/* Class */}
-                      {formData.travelClass && (
-                        <span className="px-2 py-0.5 bg-gray-100 rounded text-xs capitalize">
-                          {formData.travelClass}
-                        </span>
-                      )}
+                      {/*  {formData.travelClass && ( */}
+                      <div className="">
+                        <Image
+                          src="/images/icons/class.png"
+                          width={20}
+                          height={20}
+                          alt="Nationality"
+                          className="object-cover"
+                        /> 
+                      </div>
+                      
+                      
+                      {/*  )} */}
 
-                      <svg
+                     {/*  <svg
                         className={`w-4 h-4 ml-2 transition-transform ${
                           showTravelers ? 'rotate-180' : ''
                         }`}
@@ -450,8 +480,11 @@ export const HeroSection: React.FC = () => {
                           strokeWidth={2}
                           d="M19 9l-7 7-7-7"
                         />
-                      </svg>
+                      </svg> */}
                     </button>
+                    {/* selected class data */}
+                    <span className="uppercase font-medium text-xs text-gray-400 pl-0.5">{formData.travelClass}</span>
+                    {/* selected class data ends*/}
 
                     {/* Dropdown panel */}
                     {showTravelers && (
@@ -601,47 +634,28 @@ export const HeroSection: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-3 mb-5 flex-wrap">
-                  <button
-                    type="button"
-                    onClick={() => setPassengerType('regular')}
-                    className={`flex items-center gap-2 px-5 py-2 rounded-lg font-medium transition ${
-                      passengerType === 'regular'
-                        ? 'bg-pink-100 text-pink-600 border border-pink-400'
-                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                        passengerType === 'regular' ? 'border-pink-500' : 'border-gray-400'
-                      }`}
-                    >
-                      {passengerType === 'regular' && (
-                        <div className="w-2 h-2 rounded-full bg-pink-500"></div>
-                      )}
-                    </div>
-                    Regular
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPassengerType('student')}
-                    className={`flex items-center gap-2 px-5 py-2 rounded-lg font-medium transition ${
-                      passengerType === 'student'
-                        ? 'bg-pink-100 text-pink-600 border border-pink-400'
-                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                        passengerType === 'student' ? 'border-pink-500' : 'border-gray-400'
-                      }`}
-                    >
-                      {passengerType === 'student' && (
-                        <div className="w-2 h-2 rounded-full bg-pink-500"></div>
-                      )}
-                    </div>
-                    Student Fare
-                  </button>
+                <div className="flex gap-3 mb-5 mt-6 flex-wrap">
+                  <RoundCheckbox
+                    checked={passengerType === 'regular'}
+                    onChange={() => setPassengerType('regular')}
+                    label="Regular"
+                    subLabel="Regular"
+                    uncheckedLabelClassName="bg-background-default border border-border-blue-50 rounded-[4px] text-text-default px-4"
+                    checkedLabelClassName="bg-background-grey-light text-text-default border border-border-blue-50 rounded-[4px] px-4"
+                    uncheckedCircleColor="bg-background-grey-light mr-2"
+                    checkedCircleColor="bg-secondary-default mr-2"
+                  />
+
+                  <RoundCheckbox
+                    checked={passengerType === 'student'}
+                    onChange={() => setPassengerType('student')}
+                    label="Student Fare"
+                    subLabel="Extra discount/baggage"
+                    uncheckedLabelClassName="bg-background-default border border-border-blue-50 rounded-[4px] text-text-default px-4"
+                    checkedLabelClassName="bg-background-grey-light text-text-default border border-border-blue-50 rounded-[4px] px-4"
+                    uncheckedCircleColor="bg-background-grey-light mr-2"
+                    checkedCircleColor="bg-secondary-default mr-2"
+                  />
                 </div>
               </>
             )}
@@ -757,7 +771,7 @@ export const HeroSection: React.FC = () => {
             {/* SEARCH BUTTON */}
             <button
               type="submit"
-              className="absolute right-8 -bottom-6 w-max bg-primary-default hover:bg-secondary-dark text-white py-4 px-8 rounded-[12px] text-base font-medium flex items-center justify-center transition shadow-lg"
+              className="absolute right-8 -bottom-6 w-max bg-primary-default hover:bg-secondary-dark text-white py-4 px-8 rounded-[12px] text-base font-medium flex items-center justify-center transition shadow-custom"
             >
               {activeTab === 'international-flight' || activeTab === 'domestic-flight'
                 ? 'Search Flight'

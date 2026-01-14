@@ -9,7 +9,7 @@ export const SpecialOffers: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('all');
 
   return (
-    <section className="container pt-40 pb-14 ">
+    <section className="container pt-56 ">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-[28px] leading-[36px] font-bold text-text-default">Special Offer</h2>
         <button className="text-text-primary hover:text-red-700 font-semibold flex items-center gap-1 transition">

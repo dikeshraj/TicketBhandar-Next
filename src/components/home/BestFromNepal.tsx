@@ -12,7 +12,7 @@ import 'swiper/css';
 
 export const BestFromNepal: React.FC = () => {
   return (
-    <section className="container py-12">
+    <section className="container pt-12">
       <div className="border border-border-blue-25 rounded-[14px] px-8 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-6 capitalize">

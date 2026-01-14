@@ -33,6 +33,7 @@ const config: Config = {
           'primary': '#212E61',
           'grey': '#898989',
           'greytwo': '#7A7A7A',
+          'grey-light': '#D9D9D9',
 
         },
         border: {
@@ -40,6 +41,9 @@ const config: Config = {
           'blue-50': '#212E6180',
         }
        
+      },
+      boxShadow:{
+        custom: '1.95px 1.95px 2.6px rgba(0, 0, 0, 0.15)',
       },
       maxWidth: {
         '8xl': '1400px',

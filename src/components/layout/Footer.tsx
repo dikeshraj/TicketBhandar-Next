@@ -8,7 +8,7 @@ import Image from 'next/image';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="pt-2 pb-6">
+    <footer className="pt-12 pb-6">
       <div className="container">
         {/* Visit Us Online */}
         {/*  <div className="mb-10">
@@ -188,10 +188,9 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Copyright */}
-        <div className="pt-6 border-t border-gray-200 text-center">
-          <p className="text-gray-600 text-sm">
-            Copyright © 2025, Ticket Bhandar. Positively yours on holiday Travel Private Limited.
-            Nepal. All rights reserved
+        <div className="pt-6 border-t border-border-blue-25 text-start">
+          <p className="text-text-default font-medium text-xs">
+            Copyright © 2025 Ticket Bhandar (formerly known as Sealinks Travel Private Limited),Nepal. All rights reserved
           </p>
         </div>
       </div>

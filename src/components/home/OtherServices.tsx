@@ -5,7 +5,7 @@ import { SERVICES } from '@/lib/constants';
 
 export const OtherServices: React.FC = () => {
   return (
-    <section className="container py-12">
+    <section className="container pt-12">
       <div className="border border-border-blue-25 rounded-[14px] px-8 py-8">
         <div className="flex items-center justify-between mb-6 capitalize">
           <h2 className="text-[28px] leading-[36px] font-bold text-text-default">Other Services</h2>

@@ -20,7 +20,7 @@ export const AdsBanner: React.FC<AdsBannerProps> = ({ type = 'kathmandu' }) => {
     const banner = ADS_BANNERS[type];
     return (
       <>
-        <div className="container">
+        <div className="container pt-12">
         <div className="relative w-full h-[280px]">
           <Swiper
             modules={[EffectFade, Autoplay]}
@@ -39,12 +39,12 @@ export const AdsBanner: React.FC<AdsBannerProps> = ({ type = 'kathmandu' }) => {
           >
             {banner.map((banner, index) => (
               <SwiperSlide key={index}>
-                <div className="relative w-full h-[280px]">
+                <div className="relative w-full h-[280px] rounded-[20px]">
                   <Image
                     src={banner.image}
                     alt={banner.alt}
                     fill
-                    className="object-contain"
+                    className="object-cover rounded-[20px]"
                     priority={index === 0}
                   />
                 </div>
@@ -85,7 +85,7 @@ export const AdsBanner: React.FC<AdsBannerProps> = ({ type = 'kathmandu' }) => {
     const banner = ADS_BANNERS[type];
     return (
       <>
-        <div className="container">
+        <div className="container pt-12">
         <div className="relative w-full h-[280px]">
           <Swiper
             modules={[EffectFade, Autoplay]}
@@ -104,12 +104,12 @@ export const AdsBanner: React.FC<AdsBannerProps> = ({ type = 'kathmandu' }) => {
           >
             {banner.map((banner, index) => (
               <SwiperSlide key={index}>
-                <div className="relative w-full h-[280px]">
+                <div className="relative w-full h-[280px] rounded-[20px]">
                   <Image
                     src={banner.image}
                     alt={banner.alt}
                     fill
-                    className="object-contain"
+                    className="object-cover rounded-[20px]"
                     priority={index === 0}
                   />
                 </div>
