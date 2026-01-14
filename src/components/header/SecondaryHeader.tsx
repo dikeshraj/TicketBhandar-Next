@@ -1,19 +1,35 @@
-// components/layout/SecondaryHeader.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Menu, User } from 'lucide-react';
+import { Menu, User, LogOut } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 import { HeaderUser } from '@/types/user';
+import { useAuth } from '@/lib/authContext';
 
 type SecondaryHeaderProps = {
   user?: HeaderUser | null;
 };
 
-export const SecondaryHeader: React.FC<SecondaryHeaderProps> = ({ user }) => {
+export const SecondaryHeader: React.FC<SecondaryHeaderProps> = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
+
+  const getDashboardLink = () => {
+    if (!user) return '/';
+    switch (user.role) {
+      case 'super-admin':
+        return '/admin/super-admin';
+      case 'admin':
+        return '/admin/dashboard';
+      case 'agent':
+        return '/admin/agent';
+      default:
+        return '/';
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -83,32 +99,129 @@ export const SecondaryHeader: React.FC<SecondaryHeaderProps> = ({ user }) => {
             </div>
 
             {/* User Section */}
-            {user && (
-              <div className="flex items-center gap-3">
+            {/*USER / AUTH SECTION   */}
+            {isAuthenticated && user ? (
+              <Link href={getDashboardLink()} className="flex items-center gap-3">
                 {user.avatar ? (
                   <Image
                     src={user.avatar}
                     alt={user.name}
-                    width={32}
-                    height={32}
+                    width={28}
+                    height={28}
                     className="rounded-full"
                   />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
+                  <Link
+                    href={getDashboardLink()}
+                    className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600"
+                  >
                     <User size={16} />
-                  </div>
+                  </Link>
                 )}
-                <div className="sm:flex flex-col leading-tight text-right">
-                  <span className="text-sm font-medium text-gray-800">{user.name}</span>
-                  {user.balance && <span className="text-xs text-gray-500">{user.balance}</span>}
+
+                <div className="flex flex-col leading-tight">
+                  <span className="font-medium text-gray-800">{user.name}</span>
+                  <button
+                    onClick={logout}
+                    className="flex items-center gap-1 text-red-600 hover:text-red-700 transition font-semibold"
+                  >
+                    <LogOut size={14} />
+                    Logout
+                  </button>
+                  {/* {user.balance && (
+                    <span className="text-xs text-gray-500">
+                      {user.balance}
+                    </span>
+                  )} */}
                 </div>
-              </div>
+              </Link>
+            ) : (
+              siteConfig.topHeader.showAuth && (
+                <>
+                  <Link href="/login" className="hover:text-blue-700">
+                    Log In
+                  </Link>
+
+                  <Link
+                    href="/register"
+                    className="px-3 py-1 rounded-full border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white transition"
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )
             )}
 
-            {/* Mobile Menu Button */}
-            <button className="lg:hidden text-gray-700">
+            {/* Hamburger Button (Mobile Only) */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="lg:hidden text-gray-700 hover:text-blue-700 transition"
+              aria-label="Toggle menu"
+            >
               <Menu size={22} />
             </button>
+
+            {/* Mobile Menu */}
+            {mobileMenuOpen && (
+              <div className="lg:hidden pb-4 border-t">
+                <nav className="flex flex-col gap-3 pt-4">
+                  {siteConfig.secondaryNav.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="text-gray-700 hover:text-blue-700 py-2"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+
+                 {/*  <div className="flex flex-col gap-2 pt-4 border-t">
+                    {isAuthenticated && user ? (
+                      <>
+                        <Link
+                          href={getDashboardLink()}
+                          className="flex items-center gap-2 text-gray-700 hover:text-blue-700 py-2"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <User size={16} />
+                          {user.name}
+                        </Link>
+
+                        <button
+                          onClick={() => {
+                            logout();
+                            setMobileMenuOpen(false);
+                          }}
+                          className="flex items-center gap-2 text-left text-red-600 hover:text-red-700 py-2"
+                        >
+                          <LogOut size={16} />
+                          Logout
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <Link
+                          href="/login"
+                          className="text-gray-700 hover:text-blue-700 py-2"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          Log in
+                        </Link>
+
+                        <Link
+                          href="/register"
+                          className="text-gray-700 hover:text-blue-700 py-2"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          Sign up
+                        </Link>
+                      </>
+                    )}
+                  </div> */}
+                </nav>
+              </div>
+            )}
           </div>
         </div>
       </div>

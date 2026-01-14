@@ -5,9 +5,9 @@ import { PARTNERS } from '@/lib/constants';
 
 export const ClientSection: React.FC = () => {
   return (
-    <section className="bg-white py-14">
+    <section className="py-14">
       <div className="container">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">Visit us online</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-8">Visit us online</h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-10 items-center">
           {PARTNERS.map((partner, idx) => (

@@ -11,11 +11,26 @@ export const siteConfig = {
     height: 36,
   },
   social: {
-    facebook: 'https://facebook.com/ticketbhandar',
-    instagram: 'https://instagram.com/ticketbhandar',
-    twitter: 'https://twitter.com/ticketbhandar',
-    tiktok: 'https://tiktok.com/@ticketbhandar',
-    youtube: 'https://youtube.com/@ticketbhandar',
+     facebook: {
+    url: 'https://facebook.com/ticketbhandar',
+    image: '/images/brands/facebook.png',
+  },
+  instagram: {
+    url: 'https://instagram.com/ticketbhandar',
+    image: '/images/brands/instagram.png',
+  },
+  twitter: {
+    url: 'https://twitter.com/ticketbhandar',
+    image: '/images/brands/twitter.png',
+  },
+  tiktok: {
+    url: 'https://tiktok.com/@ticketbhandar',
+    image: '/images/brands/tiktok.png',
+  },
+    youtube: {
+    url: 'https://youtube.com/@ticketbhandar',
+    image: '/images/brands/youtube.png',
+  },
   },
   topHeader: {
     showAgencyId: true,

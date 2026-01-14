@@ -1,6 +1,15 @@
+'use client';
+
 import React from 'react';
 import { ADS_BANNERS } from '@/config/adsBanner';
 import Image from 'next/image';
+
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectFade, Autoplay } from 'swiper/modules';
+
+import 'swiper/css';
+import 'swiper/css/effect-fade';
 
 interface AdsBannerProps {
   type?: 'kathmandu' | 'fare';
@@ -10,10 +19,41 @@ export const AdsBanner: React.FC<AdsBannerProps> = ({ type = 'kathmandu' }) => {
   if (type === 'kathmandu') {
     const banner = ADS_BANNERS[type];
     return (
-      <div className="container">
+      <>
+        <div className="container">
         <div className="relative w-full h-[280px]">
-          <Image src={banner.image} alt={banner.alt} fill className="object-contain" priority />
+          <Swiper
+            modules={[EffectFade, Autoplay]}
+            slidesPerView={1}
+            effect="fade"
+            loop={banner.length > 1}
+            autoplay={
+              banner.length > 1
+                ? {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                  }
+                : false
+            }
+            className="w-full h-full"
+          >
+            {banner.map((banner, index) => (
+              <SwiperSlide key={index}>
+                <div className="relative w-full h-[280px]">
+                  <Image
+                    src={banner.image}
+                    alt={banner.alt}
+                    fill
+                    className="object-contain"
+                    priority={index === 0}
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
+      </div>
+   
         
 
         {/* <div className="bg-gradient-to-r from-yellow-50 via-orange-50 to-yellow-50 rounded-2xl px-8 md:px-12 py-10 relative overflow-hidden shadow-lg">
@@ -37,16 +77,47 @@ export const AdsBanner: React.FC<AdsBannerProps> = ({ type = 'kathmandu' }) => {
             </div>
           </div>
         </div> */}
-      </div>
+      </>
+       
     );
   }
   if (type === 'fare') {
     const banner = ADS_BANNERS[type];
     return (
-      <div className="container">
-         <div className="relative w-full h-[280px]">
-            <Image src={banner.image} alt={banner.alt} fill className="object-contain" priority />
-         </div>
+      <>
+        <div className="container">
+        <div className="relative w-full h-[280px]">
+          <Swiper
+            modules={[EffectFade, Autoplay]}
+            slidesPerView={1}
+            effect="fade"
+            loop={banner.length > 1}
+            autoplay={
+              banner.length > 1
+                ? {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                  }
+                : false
+            }
+            className="w-full h-full"
+          >
+            {banner.map((banner, index) => (
+              <SwiperSlide key={index}>
+                <div className="relative w-full h-[280px]">
+                  <Image
+                    src={banner.image}
+                    alt={banner.alt}
+                    fill
+                    className="object-contain"
+                    priority={index === 0}
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      </div>
       
         {/* <div className="bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 rounded-2xl px-8 md:px-12 py-10 relative overflow-hidden shadow-lg">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
@@ -69,7 +140,8 @@ export const AdsBanner: React.FC<AdsBannerProps> = ({ type = 'kathmandu' }) => {
           </div>
         </div>
       </div> */}
-      </div>
+      </>
+      
     );
   }
 };

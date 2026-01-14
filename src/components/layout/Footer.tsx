@@ -4,13 +4,14 @@ import React from 'react';
 import Link from 'next/link';
 import { Facebook, Instagram, Youtube } from 'lucide-react';
 import { siteConfig } from '@/config/site';
+import Image from 'next/image';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-50 pt-12 pb-6">
+    <footer className="pt-2 pb-6">
       <div className="container">
         {/* Visit Us Online */}
-       {/*  <div className="mb-10">
+        {/*  <div className="mb-10">
           <h3 className="text-lg font-bold mb-5 text-gray-900">Visit us online</h3>
           <div className="flex items-center gap-10 flex-wrap">
             <div className="text-blue-600 font-bold text-xl">Sea Links</div>
@@ -25,99 +26,162 @@ export const Footer: React.FC = () => {
         </div> */}
 
         {/* Connect With Us */}
-        <div className="mb-10">
-          <h3 className="text-lg font-bold mb-5 text-gray-900">Connect with us</h3>
-          <div className="flex items-center gap-8 flex-wrap">
+        <div className="mb-16">
+          <h3 className="text-xl font-bold mb-5 text-gray-900">Connect with us</h3>
+          <div className="flex items-center justify-start gap-10 flex-wrap ">
             <a
               href={siteConfig.social.facebook}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition"
+              className="w-[150px] max-w-[160px] h-[65px] hover:text-blue-700 transition relative"
             >
-              <Facebook size={20} fill="currentColor" />
-              <span className="font-semibold">facebook</span>
+              <Image
+                src={siteConfig.social.facebook.image}
+                alt="Facebook"
+                fill
+                className="object-contain"
+              />
             </a>
             <a
               href={siteConfig.social.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-pink-600 hover:text-pink-700 transition"
+              className=" w-[150px] max-w-[160px] h-[65px] hover:text-pink-700 transition relative"
             >
-              <Instagram size={20} />
-              <span className="font-semibold">instagram</span>
+              <Image
+                src={siteConfig.social.instagram.image}
+                alt="Instagram"
+                fill
+                className="object-contain"
+              />
             </a>
             <a
               href={siteConfig.social.twitter}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-800 hover:text-gray-900 transition"
+              className="w-[150px] max-w-[160px] h-[45px] hover:text-gray-900 transition relative"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-              </svg>
+              <Image
+                src={siteConfig.social.twitter.image}
+                alt="Twitter"
+                fill
+                className="object-contain"
+              />
             </a>
             <a
               href={siteConfig.social.tiktok}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-800 hover:text-gray-900 font-semibold transition"
+              className="w-[150px] max-w-[160px] h-[65px] hover:text-gray-900 font-semibold transition relative"
             >
-              TikTok
+              <Image
+                src={siteConfig.social.tiktok.image}
+                alt="TikTok"
+                fill
+                className="object-contain"
+              />
             </a>
             <a
               href={siteConfig.social.youtube}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-red-600 hover:text-red-700 transition"
+              className="w-[150px] max-w-[160px] h-[65px] hover:text-red-700 transition relative"
             >
-              <Youtube size={20} fill="currentColor" />
-              <span className="font-semibold">Youtube</span>
+              <Image
+                src={siteConfig.social.youtube.image}
+                alt="YouTube"
+                fill
+                className="object-contain"
+              />
             </a>
           </div>
         </div>
 
         {/* Payment Methods */}
-        <div className="mb-10">
-          <h3 className="text-lg font-bold mb-5 text-gray-900">We accept</h3>
-          <div className="flex items-center gap-5 flex-wrap">
-            <div className="px-6 py-2 bg-white rounded-lg border border-gray-200 shadow-sm">
-              <span className="text-red-600 font-black text-xl">khalti</span>
+        <div className="mb-16">
+          <h3 className="text-xl font-bold mb-5 text-gray-900">We accept</h3>
+          <div className="flex items-center gap-10 flex-wrap">
+            <div className="w-[100px] max-w-[105px] h-[45px] md:w-[135px] md:max-w-[140px] md:h-[55px] relative">
+              {/* <span className="text-red-600 font-black text-xl">khalti</span> */}
+              <Image
+                src="/images/brands/khalti.png"
+                alt="Facebook"
+                fill
+                className="object-contain"
+              />
             </div>
-            <div className="px-4 py-2 bg-white rounded-lg border border-gray-200 shadow-sm">
-              <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-red-500"></div>
-                <div className="w-8 h-8 rounded-full bg-orange-400 -ml-3"></div>
-              </div>
+            <div className="w-[100px] max-w-[105px] h-[45px]  md:w-[120px] md:max-w-[125px] md:h-[55px] relative">
+              <Image
+                src="/images/brands/mastercard.png"
+                alt="Facebook"
+                fill
+                className="object-contain"
+              />
+              {/*  <div className="w-8 h-8 rounded-full bg-red-500"></div>
+                <div className="w-8 h-8 rounded-full bg-orange-400 -ml-3"></div> */}
             </div>
-            <div className="px-6 py-2 bg-white rounded-lg border border-gray-200 shadow-sm">
-              <span className="text-blue-900 font-black text-xl">VISA</span>
+            <div className="w-[100px] max-w-[105px] h-[45px] md:w-[120px] md:max-w-[125px] md:h-[55px] relative">
+              <Image
+                src="/images/brands/visa-inc.png" // <-- path from public/
+                alt="Facebook"
+                fill
+                className="object-contain"
+              />
+              {/*   <span className="text-blue-900 font-black text-xl">VISA</span> */}
             </div>
-            <div className="px-6 py-2 bg-white rounded-lg border border-gray-200 shadow-sm">
-              <span className="text-green-600 font-black text-xl">e-Sewa</span>
+            <div className="w-[100px] max-w-[105px] h-[45px]  md:w-[120px] md:max-w-[125px] md:h-[55px] relative">
+              <Image
+                src="/images/brands/esewa.png"
+                alt="Facebook"
+                fill
+                className="object-contain"
+              />
+              {/*  <span className="text-green-600 font-black text-xl">e-Sewa</span> */}
             </div>
-            <div className="px-6 py-2 bg-white rounded-lg border border-gray-200 shadow-sm">
-              <span className="text-red-600 font-black text-xl">fonepay</span>
+            <div className="w-[100px] max-w-[105px] h-[45px] md:w-[120px] md:max-w-[125px] md:h-[55px] relative">
+              {/* <span className="text-red-600 font-black text-xl">fonepay</span> */}
+              <Image
+                src="/images/brands/fonepay.png"
+                alt="Facebook"
+                fill
+                className="object-contain"
+              />
             </div>
           </div>
         </div>
 
         {/* Quick Links */}
         <div className="mb-10">
-          <h3 className="text-lg font-bold mb-5 text-gray-900">Quick links</h3>
+          <h3 className="text-xl font-bold mb-5 text-gray-900">Quick links</h3>
           <div className="flex gap-10 flex-wrap">
-            <Link href="/about" className="text-gray-600 hover:text-red-600 font-medium transition">
+            <Link
+              href="/about"
+              className="text-gray-600 hover:text-red-600 font-medium transition underline"
+            >
               About us
             </Link>
-            <Link href="/faq" className="text-gray-600 hover:text-red-600 font-medium transition">
+            <Link
+              href="/faq"
+              className="text-gray-600 hover:text-red-600 font-medium transition underline"
+            >
               FAQ
             </Link>
-            <Link href="/contact" className="text-gray-600 hover:text-red-600 font-medium transition">
+            <Link
+              href="/contact"
+              className="text-gray-600 hover:text-red-600 font-medium transition underline"
+            >
               Contact us
             </Link>
-            <Link href="/gallery" className="text-gray-600 hover:text-red-600 font-medium transition">
+            <Link
+              href="/gallery"
+              className="text-gray-600 hover:text-red-600 font-medium transition underline"
+            >
               Gallery
             </Link>
-            <Link href="/privacy" className="text-gray-600 hover:text-red-600 font-medium transition">
+            <Link
+              href="/privacy"
+              className="text-gray-600 hover:text-red-600 font-medium transition underline"
+            >
               Privacy policy
             </Link>
           </div>

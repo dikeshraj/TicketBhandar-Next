@@ -52,7 +52,7 @@
 @layer components {
   .container {
     @apply w-full mx-auto px-4;
-    max-width: 1280px;
+    max-width: 1400px;
   }
 
   @screen sm {
@@ -62,12 +62,12 @@
   }
   @screen md{
     .container {
-      @apply px-12;
+      @apply px-8;
     }
   }
   @screen lg {
     .container {
-      @apply px-14;
+      @apply px-12;
     }
   }
 

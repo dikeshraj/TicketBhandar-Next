@@ -5,33 +5,41 @@ export const DESTINATIONS: Destination[] = [
     id: '1',
     name: 'Chitwan',
     image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop',
-    label: 'DOMESTIC',
-    description: 'Wildlife and Nature',
+    label: '2D Chitwan',
+   /*  description: 'Wildlife and Nature', */
     price: 5000,
   },
   {
     id: '2',
     name: 'Pokhara',
     image: 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?w=800&h=600&fit=crop',
-    label: 'DOMESTIC',
-    description: 'Lakes and Mountains',
+    label: '2D Pokhara',
+    /* description: 'Lakes and Mountains', */
     price: 4500,
   },
   {
     id: '3',
     name: 'Lumbini',
     image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&h=600&fit=crop',
-    label: 'DOMESTIC',
-    description: 'Birthplace of Buddha',
+    label: '2D Lumbini',
+    /* description: 'Birthplace of Buddha', */
     price: 6000,
   },
   {
     id: '4',
     name: 'Bandipur',
     image: 'https://images.unsplash.com/photo-1583419952559-3a89dd1b2b7a?w=800&h=600&fit=crop',
-    label: 'DOMESTIC',
-    description: 'Historic Hill Town',
+    label: '2D Bandipur',
+    /* description: 'Historic Hill Town', */
     price: 3500,
+  },
+  {
+    id: '5',
+    name: 'Lalitpur',
+    image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&h=600&fit=crop',
+    label: '2D Lalitpur',
+    /* description: 'Birthplace of Buddha', */
+    price: 6000,
   },
 ];
 
