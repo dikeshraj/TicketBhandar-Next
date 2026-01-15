@@ -12,23 +12,23 @@ export const siteConfig = {
   },
   social: {
      facebook: {
-    url: 'https://facebook.com/ticketbhandar',
+    href: 'https://facebook.com/ticketbhandar',
     image: '/images/brands/facebook.png',
   },
   instagram: {
-    url: 'https://instagram.com/ticketbhandar',
+    href: 'https://instagram.com/ticketbhandar',
     image: '/images/brands/instagram.png',
   },
   twitter: {
-    url: 'https://twitter.com/ticketbhandar',
-    image: '/images/brands/twitter.png',
+    href: 'https://twitter.com/ticketbhandar',
+    image: '/images/brands/twitter.svg',
   },
   tiktok: {
-    url: 'https://tiktok.com/@ticketbhandar',
+    href: 'https://tiktok.com/@ticketbhandar',
     image: '/images/brands/tiktok.png',
   },
     youtube: {
-    url: 'https://youtube.com/@ticketbhandar',
+    href: 'https://youtube.com/@ticketbhandar',
     image: '/images/brands/youtube.png',
   },
   },

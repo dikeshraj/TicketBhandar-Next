@@ -8,7 +8,7 @@ import Image from 'next/image';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="pt-12 pb-6">
+    <footer className="pt-8">
       <div className="container">
         {/* Visit Us Online */}
         {/*  <div className="mb-10">
@@ -26,14 +26,14 @@ export const Footer: React.FC = () => {
         </div> */}
 
         {/* Connect With Us */}
-        <div className="mb-16">
+        <div className="pt-8">
           <h3 className="text-xl font-bold mb-5 text-gray-900">Connect with us</h3>
           <div className="flex items-center justify-start gap-10 flex-wrap ">
-            <a
+            <Link
               href={siteConfig.social.facebook}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-[150px] max-w-[160px] h-[65px] hover:text-blue-700 transition relative"
+              className="w-[125px] max-w-[130px] h-[50px] md:w-[140px] md:max-w-[145px] md:h-[65px] hover:scale-90 transition relative"
             >
               <Image
                 src={siteConfig.social.facebook.image}
@@ -41,12 +41,12 @@ export const Footer: React.FC = () => {
                 fill
                 className="object-contain"
               />
-            </a>
-            <a
+            </Link>
+            <Link
               href={siteConfig.social.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              className=" w-[150px] max-w-[160px] h-[65px] hover:text-pink-700 transition relative"
+              className="w-[125px] max-w-[130px] h-[50px] md:w-[140px] md:max-w-[145px] md:h-[65px] hover:scale-90 transition relative"
             >
               <Image
                 src={siteConfig.social.instagram.image}
@@ -54,12 +54,12 @@ export const Footer: React.FC = () => {
                 fill
                 className="object-contain"
               />
-            </a>
-            <a
+            </Link>
+            <Link
               href={siteConfig.social.twitter}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-[150px] max-w-[160px] h-[45px] hover:text-gray-900 transition relative"
+              className="w-[125px] max-w-[130px] h-[50px] md:w-[140px] md:max-w-[145px] md:h-[65px] hover:scale-90 transition relative"
             >
               <Image
                 src={siteConfig.social.twitter.image}
@@ -67,12 +67,12 @@ export const Footer: React.FC = () => {
                 fill
                 className="object-contain"
               />
-            </a>
-            <a
+            </Link>
+            <Link
               href={siteConfig.social.tiktok}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-[150px] max-w-[160px] h-[65px] hover:text-gray-900 font-semibold transition relative"
+              className="w-[125px] max-w-[130px] h-[50px] md:w-[140px] md:max-w-[145px] md:h-[65px] hover:scale-90 transition relative"
             >
               <Image
                 src={siteConfig.social.tiktok.image}
@@ -80,12 +80,12 @@ export const Footer: React.FC = () => {
                 fill
                 className="object-contain"
               />
-            </a>
-            <a
+            </Link>
+            <Link
               href={siteConfig.social.youtube}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-[150px] max-w-[160px] h-[65px] hover:text-red-700 transition relative"
+              className="w-[125px] max-w-[130px] h-[50px] md:w-[140px] md:max-w-[145px] md:h-[65px] hover:scale-90 transition relative"
             >
               <Image
                 src={siteConfig.social.youtube.image}
@@ -93,12 +93,12 @@ export const Footer: React.FC = () => {
                 fill
                 className="object-contain"
               />
-            </a>
+            </Link>
           </div>
         </div>
 
         {/* Payment Methods */}
-        <div className="mb-16">
+        <div className="pt-8">
           <h3 className="text-xl font-bold mb-5 text-gray-900">We accept</h3>
           <div className="flex items-center gap-10 flex-wrap">
             <div className="w-[100px] max-w-[105px] h-[45px] md:w-[135px] md:max-w-[140px] md:h-[55px] relative">
@@ -122,7 +122,7 @@ export const Footer: React.FC = () => {
             </div>
             <div className="w-[100px] max-w-[105px] h-[45px] md:w-[120px] md:max-w-[125px] md:h-[55px] relative">
               <Image
-                src="/images/brands/visa-inc.png" // <-- path from public/
+                src="/images/brands/visa-inc.png" 
                 alt="Facebook"
                 fill
                 className="object-contain"
@@ -151,7 +151,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Quick Links */}
-        <div className="mb-10">
+        <div className="pt-8 mb-10">
           <h3 className="text-xl font-bold mb-5 text-gray-900">Quick links</h3>
           <div className="flex gap-10 flex-wrap">
             <Link

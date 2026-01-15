@@ -227,9 +227,9 @@ export const HeroSection: React.FC = () => {
           </div>
         </div>
 
-        <div className="absolute h-full w-full max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-10 left-1/2 -translate-x-1/2 top-[60%]">
+        <div className="absolute h-full w-full lg:max-w-[1140px] xl:max-w-[1200px] 2xl:max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-10 left-1/2 -translate-x-1/2 top-[60%]">
           {/* Tabs Row */}
-          <div className="bg-white shadow-custom rounded-[16px] p-6 absolute top-[-11%] left-1/2 -translate-x-1/2 z-10">
+          <div className="bg-white shadow-custom rounded-[20px] p-6 absolute top-[-11%] left-1/2 -translate-x-1/2 z-10">
             <div className="flex flex-row gap-2 items-center justify-between w-full h-full">
               {tabs.map((tab) => (
                 <button
@@ -248,7 +248,7 @@ export const HeroSection: React.FC = () => {
                     height={35}
                     className="aspect-square"
                   />
-                  <span className="whitespace-nowrap">{tab.label}</span>
+                  <span className="hidden lg:inline-block whitespace-nowrap">{tab.label}</span>
                 </button>
               ))}
             </div>
@@ -285,27 +285,33 @@ export const HeroSection: React.FC = () => {
             {/* FLIGHT FORM */}
             {(activeTab === 'international-flight' || activeTab === 'domestic-flight') && (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                  <div className="md:col-span-1 border border-border-blue-50 rounded-[10px] p-4">
-                    <label className="block text-xs font-medium text-text-default mb-1.5">
-                      From
-                    </label>
-                    <AutocompleteInput field="from" options={cityOptions} placeholder="Kathmandu" />
-                  </div>
-                  {/* direction icon */}
-                  <div className="w-10 h-10 bg-white top-[50%] left-[24%] border border-border-blue-25 rounded-full flex items-centet justify-center text-center absolute">
-                    <Image
-                      alt="direction"
-                      src="/images/icons/square-direction.png"
-                      width={18}
-                      height={18}
-                      className="object-contain aspect-square text-center"
-                    />
-                  </div>
-                  {/* direction icon ends */}
-                  <div className="md:col-span-1 border border-border-blue-50 rounded-[10px] p-4">
-                    <label className="block text-xs font-semibold text-gray-600 mb-1.5">To</label>
-                    <AutocompleteInput field="to" options={cityOptions} placeholder="London" />
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3.5 mb-4">
+                  <div className="md:col-span-2 grid grid-cols-2 gap-3.5 relative">
+                    <div className="col-span-1 border border-border-blue-50 rounded-[10px] p-4">
+                      <label className="block text-xs font-medium text-text-default mb-1.5">
+                        From
+                      </label>
+                      <AutocompleteInput
+                        field="from"
+                        options={cityOptions}
+                        placeholder="Kathmandu"
+                      />
+                    </div>
+                    {/* direction icon */}
+                    <div className="w-12 h-12 bg-white top-[29%] left-[45%] border border-border-blue-25 rounded-full flex items-center justify-center text-center absolute">
+                      <Image
+                        alt="direction"
+                        src="/images/icons/square-direction.png"
+                        width={18}
+                        height={18}
+                        className="object-contain aspect-square text-center"
+                      />
+                    </div>
+                    {/* direction icon ends */}
+                    <div className="col-span-1 border border-border-blue-50 rounded-[10px] p-4">
+                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">To</label>
+                      <AutocompleteInput field="to" options={cityOptions} placeholder="London" />
+                    </div>
                   </div>
 
                   <div
@@ -332,7 +338,7 @@ export const HeroSection: React.FC = () => {
                         size={16}
                         className="absolute top-6 right-4 stroke-secondary-default"
                       />
-                      {/*  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-calendar-days-icon lucide-calendar-days"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg> */}
+
                       {departCalendarOpen && (
                         <div className="absolute z-30 mt-1 bg-white shadow-xl rounded-lg p-3 border border-gray-200">
                           <DayPicker
@@ -430,16 +436,19 @@ export const HeroSection: React.FC = () => {
                           {' Traveler' +
                             ((formData.adults || 1) +
                               (formData.children || 0) +
-                              (formData.infants || 0) >1
+                              (formData.infants || 0) >
+                            1
                               ? 's'
                               : '')}
                         </span>
                       </div>
-                      
+
                       {/* Nationality short */}
                       {/*  {formData.nationality && ( */}
                       <div className=" flex gap-2">
-                        <span className="text-sm uppercase font-semibold">({formData.nationality})</span>
+                        <span className="text-sm uppercase font-semibold">
+                          ({formData.nationality})
+                        </span>
                         <Image
                           src="/images/icons/flagOfnepal.svg"
                           width={14}
@@ -460,13 +469,12 @@ export const HeroSection: React.FC = () => {
                           height={20}
                           alt="Nationality"
                           className="object-cover"
-                        /> 
+                        />
                       </div>
-                      
-                      
+
                       {/*  )} */}
 
-                     {/*  <svg
+                      {/*  <svg
                         className={`w-4 h-4 ml-2 transition-transform ${
                           showTravelers ? 'rotate-180' : ''
                         }`}
@@ -483,7 +491,9 @@ export const HeroSection: React.FC = () => {
                       </svg> */}
                     </button>
                     {/* selected class data */}
-                    <span className="uppercase font-medium text-xs text-gray-400 pl-0.5">{formData.travelClass}</span>
+                    <span className="uppercase font-medium text-xs text-gray-400 pl-0.5">
+                      {formData.travelClass}
+                    </span>
                     {/* selected class data ends*/}
 
                     {/* Dropdown panel */}

@@ -9,10 +9,10 @@ export const OtherServices: React.FC = () => {
       <div className="border border-border-blue-25 rounded-[14px] px-8 py-8">
         <div className="flex items-center justify-between mb-6 capitalize">
           <h2 className="text-[28px] leading-[36px] font-bold text-text-default">Other Services</h2>
-          <button className="text-text-primary hover:text-red-700 font-semibold flex items-center gap-1 transition">
+          {/* <button className="text-text-primary hover:text-red-700 font-semibold flex items-center gap-1 transition">
             View All Offers
             <ChevronRight className="text-secondary-default" size={18} />
-          </button>
+          </button> */}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
