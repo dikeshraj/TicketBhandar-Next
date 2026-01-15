@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Menu, User, LogOut } from 'lucide-react';
+import { Menu, X, User, LogOut, ChevronDown } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 import { HeaderUser } from '@/types/user';
 import { useAuth } from '@/lib/authContext';
@@ -44,13 +44,13 @@ export const SecondaryHeader: React.FC<SecondaryHeaderProps> = () => {
   if (!isScrolled) return null;
 
   return (
-    <div className="bg-background-default border-b border-primary-dark shadow-sm sticky top-0 z-40 transition-all duration-300 ease-in-out">
-      <div className="max-w-8xl mx-auto px-6">
-        <div className="flex items-center justify-between h-14">
+    <div className="bg-background-default border-b border-border-blue-25 shadow-sm sticky top-0 z-40 transition-all duration-300 ease-in-out py-1">
+      <div className="container mx-auto">
+        <div className="flex items-center justify-between">
           {/* Left: Logo + Navigation */}
           <div className="flex items-center gap-6">
             {/* Logo */}
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="flex items-center mr-3">
               <Image
                 src={siteConfig.logo.src}
                 alt={siteConfig.logo.alt}
@@ -61,37 +61,43 @@ export const SecondaryHeader: React.FC<SecondaryHeaderProps> = () => {
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-6">
+            <nav className="hidden lg:flex items-center justify-start">
               {siteConfig.secondaryNav.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-sm font-medium text-gray-700 hover:text-blue-700 transition flex items-center"
+                  className="text-xs font-normal text-text-default hover:text-blue-700 transition flex flex-col items-center justify-center px-2.5 py-2"
                 >
-                  <Image src={item.image} alt={item.name} width={18} height={18} className="mr-2" />
-                  {item.name}
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    width={28}
+                    height={28}
+                    className="object-cover mb-0.5"
+                  />
+                  <span>{item.name}</span>
                 </Link>
               ))}
             </nav>
           </div>
 
           {/* Right: Social Links + User + Mobile Menu */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-end">
             {/* Social Icons (Desktop Only) */}
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2 lg:gap-2.5 px-4 lg:px-5">
               {siteConfig.socialLinks.map((link, idx) => (
                 <Link
                   key={idx}
                   href={link.href.trim()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-500 hover:text-blue-600 transition"
+                  className=" "
                 >
                   <Image
                     src={link.icon}
                     alt={`${link.href.split('/')[2]} icon`}
-                    width={20}
-                    height={20}
+                    width={22}
+                    height={22}
                     className="rounded"
                   />
                 </Link>
@@ -101,7 +107,10 @@ export const SecondaryHeader: React.FC<SecondaryHeaderProps> = () => {
             {/* User Section */}
             {/*USER / AUTH SECTION   */}
             {isAuthenticated && user ? (
-              <Link href={getDashboardLink()} className="flex items-center gap-3">
+              <Link
+                href={getDashboardLink()}
+                className="flex items-center gap-1 px-4 lg:px-5 h-4 border-l border-secondary-default"
+              >
                 {user.avatar ? (
                   <Image
                     src={user.avatar}
@@ -111,19 +120,16 @@ export const SecondaryHeader: React.FC<SecondaryHeaderProps> = () => {
                     className="rounded-full"
                   />
                 ) : (
-                  <Link
-                    href={getDashboardLink()}
-                    className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600"
-                  >
+                  <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
                     <User size={16} />
-                  </Link>
+                  </div>
                 )}
 
                 <div className="flex flex-col leading-tight">
                   <span className="font-medium text-gray-800">{user.name}</span>
                   <button
                     onClick={logout}
-                    className="flex items-center gap-1 text-red-600 hover:text-red-700 transition font-semibold"
+                    className="flex items-center gap-1 text-secondary-default hover:text-red-700 transition font-semibold"
                   >
                     <LogOut size={14} />
                     Logout
@@ -137,90 +143,86 @@ export const SecondaryHeader: React.FC<SecondaryHeaderProps> = () => {
               </Link>
             ) : (
               siteConfig.topHeader.showAuth && (
-                <>
+                <div className="flex items-center gap-2 px-4 lg:px-5 h-4 border-l border-secondary-default">
                   <Link href="/login" className="hover:text-blue-700">
                     Log In
                   </Link>
 
                   <Link
                     href="/register"
-                    className="px-3 py-1 rounded-full border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white transition"
+                    className="px-2.5 py-0.5 rounded-full border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white transition"
                   >
                     Sign Up
                   </Link>
-                </>
+                </div>
               )
             )}
 
-            {/* Hamburger Button (Mobile Only) */}
-            <button
-              onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden text-gray-700 hover:text-blue-700 transition"
-              aria-label="Toggle menu"
-            >
-              <Menu size={22} />
+            {/* Currency */}
+            <button className="flex items-center gap-1 px-4 lg:px-5h-4 border-l border-secondary-default hover:text-blue-700">
+              <span>
+                {siteConfig.topHeader.currency ? `NRs ${siteConfig.topHeader.currency}` : 'NRs'}
+              </span>
+
+              {!siteConfig.topHeader.currency && (
+                <ChevronDown size={14} className="text-xs stroke-primary-default" />
+              )}
             </button>
 
-            {/* Mobile Menu */}
+            {/* Hamburger Button (Mobile Only) */}
+            {/* Hamburger Button (Mobile/Tablet) */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="lg:hidden text-gray-700 hover:text-blue-700 transition ml-3"
+              aria-label="Open menu"
+            >
+              <Menu size={24} />
+            </button>
+
+            {/* Mobile Menu Overlay */}
             {mobileMenuOpen && (
-              <div className="lg:hidden pb-4 border-t">
-                <nav className="flex flex-col gap-3 pt-4">
-                  {siteConfig.secondaryNav.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="text-gray-700 hover:text-blue-700 py-2"
+              <>
+                {/* Backdrop */}
+                <div
+                  className="fixed inset-0 bg-black/40 backdrop-blur-sm z-49 lg:hidden"
+                  onClick={() => setMobileMenuOpen(false)}
+                />
+
+                {/* Slide-in Menu */}
+                <div className="fixed top-0 right-0 bottom-0 w-[280px] max-w-[85vw] bg-white shadow-xl z-50 lg:hidden flex flex-col">
+                  {/* Close Button */}
+                  <div className="flex justify-end p-4">
+                    <button
                       onClick={() => setMobileMenuOpen(false)}
+                      className="text-gray-600 hover:text-gray-900 transition"
+                      aria-label="Close menu"
                     >
-                      {item.name}
-                    </Link>
-                  ))}
+                      <X size={24} />
+                    </button>
+                  </div>
 
-                 {/*  <div className="flex flex-col gap-2 pt-4 border-t">
-                    {isAuthenticated && user ? (
-                      <>
-                        <Link
-                          href={getDashboardLink()}
-                          className="flex items-center gap-2 text-gray-700 hover:text-blue-700 py-2"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          <User size={16} />
-                          {user.name}
-                        </Link>
-
-                        <button
-                          onClick={() => {
-                            logout();
-                            setMobileMenuOpen(false);
-                          }}
-                          className="flex items-center gap-2 text-left text-red-600 hover:text-red-700 py-2"
-                        >
-                          <LogOut size={16} />
-                          Logout
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <Link
-                          href="/login"
-                          className="text-gray-700 hover:text-blue-700 py-2"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          Log in
-                        </Link>
-
-                        <Link
-                          href="/register"
-                          className="text-gray-700 hover:text-blue-700 py-2"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          Sign up
-                        </Link>
-                      </>
-                    )}
-                  </div> */}
-                </nav>
-              </div>
+                  {/* Navigation Links */}
+                  <nav className="flex flex-col gap-1 px-4 pb-4 overflow-y-auto">
+                    {siteConfig.secondaryNav.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="py-3 px-4 flex flex-row items-center text-sm font-medium text-text-default hover:text-primary-default rounded-lg transition"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          width={28}
+                          height={28}
+                          className="object-cover mb-0.5 mr-2"
+                        />
+                        <span>{item.name}</span>
+                      </Link>
+                    ))}
+                  </nav>
+                </div>
+              </>
             )}
           </div>
         </div>

@@ -7,8 +7,8 @@ export const siteConfig = {
   logo: {
     src: '/images/brands/tb-logo.png', 
     alt: 'Ticket Bhandar',
-    width: 100,
-    height: 36,
+    width: 110,
+    height: 50,
   },
   social: {
      facebook: {
@@ -36,7 +36,7 @@ export const siteConfig = {
     showAgencyId: true,
     showFareInquiry: true,
     showAuth: true,
-    currency: 'NRs',
+    currency: '5000',
   },
 
   secondaryNav: [
