@@ -46,7 +46,7 @@ export interface FlightSearchParams {
 export interface Flight {
   id: string;
   airline: string;
-  airlineLogo: string;
+  airlineLogo: string[];
   from: string;
   fromCode: string;
   to: string;

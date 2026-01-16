@@ -1,3 +1,5 @@
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 export default function RoundCheckbox({
   checked,
@@ -54,5 +56,32 @@ export default function RoundCheckbox({
         )}
       </div>
     </label>
+  );
+}
+
+
+// MUI square checkbox component (specially for sidebar filter in flightsearch page)
+export function SquareCheckbox({ label }: { label: string }) {
+  return (
+    <FormControlLabel
+      control={
+        <Checkbox
+          size="small"
+          sx={{
+            padding: '4px',
+            color: '#9ca3af', // gray-400
+            '&.Mui-checked': {
+              color: '#2563eb', // blue-600
+            },
+          }}
+        />
+      }
+      label={
+        <span className="text-sm text-gray-700">{label}</span>
+      }
+      sx={{
+        margin: 0,
+      }}
+    />
   );
 }

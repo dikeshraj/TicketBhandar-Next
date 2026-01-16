@@ -109,8 +109,8 @@ export const SPECIAL_OFFERS: SpecialOffer[] = [
 
 export const MOCK_FLIGHTS: Flight[] = Array.from({ length: 7 }, (_, i) => ({
   id: `flight-${i + 1}`,
-  airline: 'Turkish Airlines',
-  airlineLogo: '🇹🇷',
+  airline: 'Qatar Airways,Turkish Airlines',
+  airlineLogo: ['/images/brands/qatar.png', '/images/brands/turkey.png'],
   from: 'Kathmandu',
   fromCode: 'KTM',
   to: 'London',

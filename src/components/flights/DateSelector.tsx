@@ -22,7 +22,7 @@ export const DateSelector: React.FC = () => {
                   : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
               }`}
             >
-              <div className="text-xs font-medium">{datePrice.day}</div>
+              {<div className="text-xs font-medium">{datePrice.day}</div>}
               <div className="text-base font-bold">{datePrice.dayNum}</div>
               <div className="text-xs">₹ {formatPrice(datePrice.price)}</div>
             </button>

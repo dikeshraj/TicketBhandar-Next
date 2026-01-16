@@ -26,8 +26,8 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
   const router = useRouter();
 
   return (
-    <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
-      <div className="px-4 py-3">
+    <div className="pt-10 z-40">
+      <div className="px-4 py-3 border border-primary-default rounded-[20px] bg-white  ">
         <div className="flex items-center justify-between mb-3">
           <button
             onClick={() => router.back()}
@@ -37,7 +37,7 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
           </button>
           <div className="text-sm font-semibold">9:30</div>
           <button className="p-2 hover:bg-gray-100 rounded-full transition">
-            <SlidersHorizontal size={24} />
+           { <SlidersHorizontal size={24} />}
           </button>
         </div>
 
